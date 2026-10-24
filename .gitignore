@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+.pytest_cache/
+.ruff_cache/
+
+# Release builds (created by packaging/build-portable.ps1)
+dist/
+
+# Bundled model (too large; downloaded on first use or bundled in the zip)
+models/
+src/swipe_news/models/
+
+# Personal data (action history, learning, settings)
+data/
+*.db
+*.db-journal
+.env
+
+# Created by tests
+tests/.data-unused/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

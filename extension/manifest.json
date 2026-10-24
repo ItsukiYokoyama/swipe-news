@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Swipe News: 十字キーで戻る",
+  "version": "1.1",
+  "description": "記事のタブで ← と → を押したまま ↑ (または ← と → の長押し) で、そのタブを閉じて Swipe News に戻る",
+  "icons": {
+    "128": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "http://127.0.0.1/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "exclude_matches": [
+        "http://127.0.0.1/*",
+        "http://localhost/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_title": "このタブを閉じて Swipe News に戻る",
+    "default_icon": {
+      "128": "icon.png"
+    }
+  }
+}

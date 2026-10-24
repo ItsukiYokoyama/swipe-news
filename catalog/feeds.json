@@ -1,0 +1,631 @@
+{
+  "format": "swipe-news-catalog",
+  "version": 1,
+  "updated": "2026-10-24",
+  "notice": "Swipe News の作者が独自に調べた、RSS が公開されていて robots.txt で取得が拒否されていないメディアの一覧です。一覧に載っていることは、各メディアが利用を許可していることを意味しません。個人で読む目的に限り、各メディアの利用規約を読んだうえで追加してください。",
+  "feeds": [
+    {
+      "id": "rss-itmedia-co-jp-rss-2-0-news-bursts-xml",
+      "name": "ITmedia NEWS",
+      "url": "https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml",
+      "genre": "ネット・テック総合",
+      "mixed": true,
+      "terms_url": "https://corp.itmedia.co.jp/media/rss_condition/",
+      "note": "RSS 利用条件: 発信元を隠すこと、一部削除などの改変、翻案、翻訳は禁止",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "rss-itmedia-co-jp-rss-2-0-aiplus-xml",
+      "name": "ITmedia AI+",
+      "url": "https://rss.itmedia.co.jp/rss/2.0/aiplus.xml",
+      "genre": "AI",
+      "terms_url": "https://corp.itmedia.co.jp/media/rss_condition/",
+      "note": "RSS 利用条件: 発信元を隠すこと、一部削除などの改変、翻案、翻訳は禁止",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "rss-itmedia-co-jp-rss-2-0-ait-xml",
+      "name": "@IT",
+      "url": "https://rss.itmedia.co.jp/rss/2.0/ait.xml",
+      "genre": "開発・IT業界",
+      "terms_url": "https://corp.itmedia.co.jp/media/rss_condition/",
+      "note": "RSS 利用条件: 発信元を隠すこと、一部削除などの改変、翻案、翻訳は禁止",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "watch-impress-co-jp-data-rss-1-0-ipw-feed-rdf",
+      "name": "Impress Watch",
+      "url": "https://www.watch.impress.co.jp/data/rss/1.0/ipw/feed.rdf",
+      "genre": "ネット・テック総合",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "pc-watch-impress-co-jp-data-rss-1-0-pcw-feed-rdf",
+      "name": "PC Watch",
+      "url": "https://pc.watch.impress.co.jp/data/rss/1.0/pcw/feed.rdf",
+      "genre": "ガジェット",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "internet-watch-impress-co-jp-data-rss-1-0-iw-feed-rdf",
+      "name": "INTERNET Watch",
+      "url": "https://internet.watch.impress.co.jp/data/rss/1.0/iw/feed.rdf",
+      "genre": "ネット・テック総合",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "k-tai-watch-impress-co-jp-data-rss-1-0-ktw-feed-rdf",
+      "name": "ケータイ Watch",
+      "url": "https://k-tai.watch.impress.co.jp/data/rss/1.0/ktw/feed.rdf",
+      "genre": "ガジェット",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "forest-watch-impress-co-jp-data-rss-1-0-wf-feed-rdf",
+      "name": "窓の杜",
+      "url": "https://forest.watch.impress.co.jp/data/rss/1.0/wf/feed.rdf",
+      "genre": "開発・IT業界",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "gigazine-net-news-rss-2-0",
+      "name": "GIGAZINE",
+      "url": "https://gigazine.net/news/rss_2.0/",
+      "genre": "ネット・テック総合",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "gizmodo-jp-index-xml",
+      "name": "ギズモード・ジャパン",
+      "url": "https://www.gizmodo.jp/index.xml",
+      "genre": "ガジェット",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "ascii-jp-rss-xml",
+      "name": "ASCII.jp",
+      "url": "https://ascii.jp/rss.xml",
+      "genre": "ガジェット",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "feeds-japan-cnet-com-rss-cnet-all-rdf",
+      "name": "CNET Japan",
+      "url": "https://feeds.japan.cnet.com/rss/cnet/all.rdf",
+      "genre": "開発・IT業界",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "feeds-japan-zdnet-com-rss-zdnet-all-rdf",
+      "name": "ZDNET Japan",
+      "url": "https://feeds.japan.zdnet.com/rss/zdnet/all.rdf",
+      "genre": "開発・IT業界",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "publickey1-jp-atom-xml",
+      "name": "Publickey",
+      "url": "https://www.publickey1.jp/atom.xml",
+      "genre": "開発・IT業界",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "wired-jp-feed-rss",
+      "name": "WIRED.jp",
+      "url": "https://wired.jp/feed/rss",
+      "genre": "ネット・テック総合",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "lifehacker-jp-feed-index-xml",
+      "name": "ライフハッカー・ジャパン",
+      "url": "https://www.lifehacker.jp/feed/index.xml",
+      "genre": "ネット・テック総合",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-mynavi-jp-rss-index",
+      "name": "マイナビニュース",
+      "url": "https://news.mynavi.jp/rss/index",
+      "genre": "ネット・テック総合",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-yahoo-co-jp-rss-topics-it-xml",
+      "name": "Yahoo!ニュース IT",
+      "url": "https://news.yahoo.co.jp/rss/topics/it.xml",
+      "genre": "ネット・テック総合",
+      "mixed": true,
+      "terms_url": "https://news.yahoo.co.jp/rss",
+      "note": "RSS は個人利用のみ。RSS を使ったサイト・アプリの公開や再配信は不可",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-yahoo-co-jp-rss-topics-science-xml",
+      "name": "Yahoo!ニュース 科学",
+      "url": "https://news.yahoo.co.jp/rss/topics/science.xml",
+      "genre": "科学",
+      "terms_url": "https://news.yahoo.co.jp/rss",
+      "note": "RSS は個人利用のみ。RSS を使ったサイト・アプリの公開や再配信は不可",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "toyokeizai-net-list-feed-rss",
+      "name": "東洋経済オンライン",
+      "url": "https://toyokeizai.net/list/feed/rss",
+      "genre": "ビジネス・経済",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "diamond-jp-list-feed-rss-dol",
+      "name": "ダイヤモンド・オンライン",
+      "url": "https://diamond.jp/list/feed/rss/dol",
+      "genre": "ビジネス・経済",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "rss-itmedia-co-jp-rss-2-0-business-xml",
+      "name": "ITmedia ビジネスオンライン",
+      "url": "https://rss.itmedia.co.jp/rss/2.0/business.xml",
+      "genre": "ビジネス・経済",
+      "terms_url": "https://corp.itmedia.co.jp/media/rss_condition/",
+      "note": "RSS 利用条件: 発信元を隠すこと、一部削除などの改変、翻案、翻訳は禁止",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "businessinsider-jp-feed-index-xml",
+      "name": "BUSINESS INSIDER JAPAN",
+      "url": "https://www.businessinsider.jp/feed/index.xml",
+      "genre": "ビジネス・経済",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "gendai-media-list-feed-rss",
+      "name": "現代ビジネス",
+      "url": "https://gendai.media/list/feed/rss",
+      "genre": "ビジネス・経済",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-yahoo-co-jp-rss-topics-business-xml",
+      "name": "Yahoo!ニュース 経済",
+      "url": "https://news.yahoo.co.jp/rss/topics/business.xml",
+      "genre": "ビジネス・経済",
+      "terms_url": "https://news.yahoo.co.jp/rss",
+      "note": "RSS は個人利用のみ。RSS を使ったサイト・アプリの公開や再配信は不可",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "natalie-mu-music-feed-news",
+      "name": "音楽ナタリー",
+      "url": "https://natalie.mu/music/feed/news",
+      "genre": "音楽",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "natalie-mu-comic-feed-news",
+      "name": "コミックナタリー",
+      "url": "https://natalie.mu/comic/feed/news",
+      "genre": "マンガ・アニメ",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "natalie-mu-eiga-feed-news",
+      "name": "映画ナタリー",
+      "url": "https://natalie.mu/eiga/feed/news",
+      "genre": "映画",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "natalie-mu-owarai-feed-news",
+      "name": "お笑いナタリー",
+      "url": "https://natalie.mu/owarai/feed/news",
+      "genre": "芸能・お笑い・舞台",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "natalie-mu-stage-feed-news",
+      "name": "ステージナタリー",
+      "url": "https://natalie.mu/stage/feed/news",
+      "genre": "芸能・お笑い・舞台",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "cinematoday-jp-index-xml",
+      "name": "シネマトゥデイ",
+      "url": "https://www.cinematoday.jp/index.xml",
+      "genre": "映画",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "4gamer-net-rss-index-xml",
+      "name": "4Gamer.net",
+      "url": "https://www.4gamer.net/rss/index.xml",
+      "genre": "ゲーム",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "game-watch-impress-co-jp-data-rss-1-0-gmw-feed-rdf",
+      "name": "GAME Watch",
+      "url": "https://game.watch.impress.co.jp/data/rss/1.0/gmw/feed.rdf",
+      "genre": "ゲーム",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-denfaminicogamer-jp-feed",
+      "name": "電ファミニコゲーマー",
+      "url": "https://news.denfaminicogamer.jp/feed",
+      "genre": "ゲーム",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "animeanime-jp-rss-index-rdf",
+      "name": "アニメ！アニメ！",
+      "url": "https://animeanime.jp/rss/index.rdf",
+      "genre": "マンガ・アニメ",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-yahoo-co-jp-rss-topics-entertainment-xml",
+      "name": "Yahoo!ニュース エンタメ",
+      "url": "https://news.yahoo.co.jp/rss/topics/entertainment.xml",
+      "genre": "芸能・お笑い・舞台",
+      "mixed": true,
+      "terms_url": "https://news.yahoo.co.jp/rss",
+      "note": "RSS は個人利用のみ。RSS を使ったサイト・アプリの公開や再配信は不可",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-yahoo-co-jp-rss-topics-domestic-xml",
+      "name": "Yahoo!ニュース 国内",
+      "url": "https://news.yahoo.co.jp/rss/topics/domestic.xml",
+      "genre": "国内",
+      "mixed": true,
+      "terms_url": "https://news.yahoo.co.jp/rss",
+      "note": "RSS は個人利用のみ。RSS を使ったサイト・アプリの公開や再配信は不可",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-yahoo-co-jp-rss-topics-world-xml",
+      "name": "Yahoo!ニュース 国際",
+      "url": "https://news.yahoo.co.jp/rss/topics/world.xml",
+      "genre": "国際",
+      "terms_url": "https://news.yahoo.co.jp/rss",
+      "note": "RSS は個人利用のみ。RSS を使ったサイト・アプリの公開や再配信は不可",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-yahoo-co-jp-rss-topics-local-xml",
+      "name": "Yahoo!ニュース 地域",
+      "url": "https://news.yahoo.co.jp/rss/topics/local.xml",
+      "genre": "地域",
+      "terms_url": "https://news.yahoo.co.jp/rss",
+      "note": "RSS は個人利用のみ。RSS を使ったサイト・アプリの公開や再配信は不可",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "asahi-com-rss-asahi-newsheadlines-rdf",
+      "name": "朝日新聞デジタル",
+      "url": "https://www.asahi.com/rss/asahi/newsheadlines.rdf",
+      "genre": "国内",
+      "mixed": true,
+      "terms_url": "https://www.asahi.com/information/service/rss.html",
+      "note": "RSS 利用条件: 改変、文章のみの抜粋転載、プログラムでの再配信、営利サイトでの利用は禁止",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "mainichi-jp-rss-etc-mainichi-flash-rss",
+      "name": "毎日新聞",
+      "url": "https://mainichi.jp/rss/etc/mainichi-flash.rss",
+      "genre": "国内",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "jiji-com-rss-ranking-rdf",
+      "name": "時事ドットコム",
+      "url": "https://www.jiji.com/rss/ranking.rdf",
+      "genre": "国内",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "huffingtonpost-jp-feeds-index-xml",
+      "name": "ハフポスト日本版",
+      "url": "https://www.huffingtonpost.jp/feeds/index.xml",
+      "genre": "国内",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "j-cast-com-index-xml",
+      "name": "J-CASTニュース",
+      "url": "https://www.j-cast.com/index.xml",
+      "genre": "国内",
+      "mixed": true,
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "feeds-cnn-co-jp-rss-cnn-cnn-rdf",
+      "name": "CNN.co.jp",
+      "url": "https://feeds.cnn.co.jp/rss/cnn/cnn.rdf",
+      "genre": "国際",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "feeds-bbci-co-uk-japanese-rss-xml",
+      "name": "BBCニュース 日本語",
+      "url": "https://feeds.bbci.co.uk/japanese/rss.xml",
+      "genre": "国際",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "news-yahoo-co-jp-rss-topics-sports-xml",
+      "name": "Yahoo!ニュース スポーツ",
+      "url": "https://news.yahoo.co.jp/rss/topics/sports.xml",
+      "genre": "スポーツ",
+      "terms_url": "https://news.yahoo.co.jp/rss",
+      "note": "RSS は個人利用のみ。RSS を使ったサイト・アプリの公開や再配信は不可",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "full-count-jp-feed",
+      "name": "Full-Count",
+      "url": "https://full-count.jp/feed/",
+      "genre": "スポーツ",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "the-ans-jp-feed",
+      "name": "THE ANSWER",
+      "url": "https://the-ans.jp/feed/",
+      "genre": "スポーツ",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "soccer-king-jp-feed",
+      "name": "サッカーキング",
+      "url": "https://www.soccer-king.jp/feed",
+      "genre": "スポーツ",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "web-gekisaka-jp-feed",
+      "name": "ゲキサカ",
+      "url": "https://web.gekisaka.jp/feed",
+      "genre": "スポーツ",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "nikkansports-com-sports-atom-xml",
+      "name": "日刊スポーツ",
+      "url": "https://www.nikkansports.com/sports/atom.xml",
+      "genre": "スポーツ",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "basketballking-jp-feed",
+      "name": "バスケットボールキング",
+      "url": "https://basketballking.jp/feed",
+      "genre": "スポーツ",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "woman-mynavi-jp-feed",
+      "name": "マイナビウーマン",
+      "url": "https://woman.mynavi.jp/feed/",
+      "genre": "暮らし・グルメ",
+      "mixed": true,
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "roomie-jp-feed",
+      "name": "ROOMIE",
+      "url": "https://www.roomie.jp/feed/",
+      "genre": "暮らし・グルメ",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "wwdjapan-com-feed",
+      "name": "WWDJAPAN",
+      "url": "https://www.wwdjapan.com/feed",
+      "genre": "暮らし・グルメ",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "elle-com-jp-rss-all-xml",
+      "name": "ELLE Japan",
+      "url": "https://www.elle.com/jp/rss/all.xml/",
+      "genre": "暮らし・グルメ",
+      "mixed": true,
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "sorae-info-feed",
+      "name": "sorae",
+      "url": "https://sorae.info/feed",
+      "genre": "科学",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "nazology-kusuguru-co-jp-feed",
+      "name": "ナゾロジー",
+      "url": "https://nazology.kusuguru.co.jp/feed",
+      "genre": "科学",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "karapaia-com-index-rdf",
+      "name": "カラパイア",
+      "url": "https://karapaia.com/index.rdf",
+      "genre": "科学",
+      "mixed": true,
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "ainow-ai-feed",
+      "name": "AINOW",
+      "url": "https://ainow.ai/feed/",
+      "genre": "AI",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "zenn-dev-feed",
+      "name": "Zenn",
+      "url": "https://zenn.dev/feed",
+      "genre": "開発・IT業界",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "qiita-com-popular-items-feed",
+      "name": "Qiita 人気記事",
+      "url": "https://qiita.com/popular-items/feed",
+      "genre": "開発・IT業界",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "gihyo-jp-feed-rss2",
+      "name": "gihyo.jp",
+      "url": "https://gihyo.jp/feed/rss2",
+      "genre": "開発・IT業界",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "thinkit-co-jp-rss-xml",
+      "name": "Think IT",
+      "url": "https://thinkit.co.jp/rss.xml",
+      "genre": "開発・IT業界",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "dev-classmethod-jp-feed",
+      "name": "DevelopersIO",
+      "url": "https://dev.classmethod.jp/feed/",
+      "genre": "開発・IT業界",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "smhn-info-feed",
+      "name": "すまほん!!",
+      "url": "https://smhn.info/feed",
+      "genre": "ガジェット",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "getnavi-jp-feed",
+      "name": "GetNavi web",
+      "url": "https://getnavi.jp/feed/",
+      "genre": "ガジェット",
+      "mixed": true,
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "getnews-jp-feed-ext-orig",
+      "name": "ガジェット通信",
+      "url": "https://getnews.jp/feed/ext/orig",
+      "genre": "ネット・テック総合",
+      "mixed": true,
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "barks-jp-feed",
+      "name": "BARKS",
+      "url": "https://www.barks.jp/feed/",
+      "genre": "音楽",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "cinemacafe-net-rss-index-rdf",
+      "name": "シネマカフェ",
+      "url": "https://www.cinemacafe.net/rss/index.rdf",
+      "genre": "映画",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "magmix-jp-feed",
+      "name": "マグミクス",
+      "url": "https://magmix.jp/feed",
+      "genre": "マンガ・アニメ",
+      "mixed": true,
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "gamespark-jp-rss-index-rdf",
+      "name": "Game*Spark",
+      "url": "https://www.gamespark.jp/rss/index.rdf",
+      "genre": "ゲーム",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "inside-games-jp-rss-index-rdf",
+      "name": "インサイド",
+      "url": "https://www.inside-games.jp/rss/index.rdf",
+      "genre": "ゲーム",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "automaton-media-com-feed",
+      "name": "AUTOMATON",
+      "url": "https://automaton-media.com/feed/",
+      "genre": "ゲーム",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "encount-press-feed",
+      "name": "ENCOUNT",
+      "url": "https://encount.press/feed/",
+      "genre": "芸能・お笑い・舞台",
+      "mixed": true,
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "bunshun-jp-list-feed-rss",
+      "name": "文春オンライン",
+      "url": "https://bunshun.jp/list/feed/rss",
+      "genre": "国内",
+      "mixed": true,
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "newsdig-tbs-co-jp-list-feed-rss",
+      "name": "TBS NEWS DIG",
+      "url": "https://newsdig.tbs.co.jp/list/feed/rss",
+      "genre": "国内",
+      "mixed": true,
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "okinawatimes-co-jp-list-feed-rss",
+      "name": "沖縄タイムス",
+      "url": "https://www.okinawatimes.co.jp/list/feed/rss",
+      "genre": "地域",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "zuuonline-com-feed",
+      "name": "ZUU online",
+      "url": "https://zuuonline.com/feed",
+      "genre": "ビジネス・経済",
+      "checked": "2026-10-21"
+    },
+    {
+      "id": "diamond-rm-net-feed",
+      "name": "ダイヤモンド・チェーンストア",
+      "url": "https://diamond-rm.net/feed/",
+      "genre": "ビジネス・経済",
+      "checked": "2026-10-21"
+    }
+  ]
+}

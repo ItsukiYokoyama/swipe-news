@@ -1,0 +1,116 @@
+/* Swipe News UI: what Tailwind classes can't express (animations, Dopa mode effects, ...) */
+html, body { background: #000; overscroll-behavior: none; height: 100%; overflow: hidden; }
+#chips { scrollbar-width: none; }
+#chips::-webkit-scrollbar { display: none; }
+.chip[aria-pressed="true"] { background: #fff; color: #000; }
+.toast { transition: opacity .3s ease, transform .3s ease; }
+.card { touch-action: none; will-change: transform; transform-origin: 50% 90%; }
+.card.settle { transition: transform .32s cubic-bezier(.2,.8,.2,1), filter .32s ease; }
+.card.fly { transition: transform .38s cubic-bezier(.4,0,.6,1), opacity .38s ease; }
+.stamp { opacity: 0; transition: opacity .12s linear; }
+/* Film-like grain, for texture without images */
+.grain { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+         opacity: .14; mix-blend-mode: overlay; }
+.mark { -webkit-text-stroke: 1px rgba(255,255,255,.22); color: transparent; }
+kbd { display: inline-grid; place-items: center; min-width: 2rem; height: 2rem; border-radius: .5rem;
+      background: rgb(255 255 255 / .1); box-shadow: inset 0 -2px 0 rgb(255 255 255 / .12); font-family: ui-monospace, monospace; }
+/* Wide screens: 3:4 cards. Height = min(viewport height, 640px, width left after the side columns, 240px × 2 + gaps + padding = 608px) */
+@media (min-width: 1024px) {
+  :root { --card-h: min(calc(100dvh - 202px), 640px, calc((100vw - 608px) * 4 / 3)); }
+  #layout { grid-template-rows: calc(var(--card-h) + 122px); }
+  #stack { flex: none; height: var(--card-h); width: calc(var(--card-h) * 3 / 4); }
+  /* Cards are small here, so scroll the RSS summary inside its box instead of cutting it */
+  .card .desc { max-height: 8.5em; overflow-y: auto; scrollbar-width: thin; }
+}
+/* Charts. Dot outlines use the color of the surface they sit on (--surface) */
+.tip { transition: opacity .12s ease; }
+.w-bar, .mix-bar, .mix-seg, .strip-bar { transition: all .3s ease; }
+.dot { width: 8px; height: 8px; border-radius: 9999px; box-shadow: 0 0 0 2px var(--surface, #0d0d0d); justify-self: center; }
+.dot.new { animation: pop .9s ease-out; }
+@keyframes pop { 0% { transform: scale(2.2); box-shadow: 0 0 0 2px var(--surface, #0d0d0d), 0 0 12px 4px rgb(255 255 255 / .6); } 100% { transform: scale(1); } }
+
+/* Dopa mode: toggled at the top. Cards auto-↑ after 5 seconds and the ← → hold time is halved */
+.dopa-switch { background: rgb(255 255 255 / .1); }
+.dopa-switch .knob { transition: transform .25s cubic-bezier(.3,1.6,.5,1), background .25s; }
+#dopa-btn[aria-checked="true"] .dopa-switch { background: linear-gradient(90deg, #f43f5e, #f59e0b, #22c55e, #06b6d4, #a855f7, #f43f5e);
+                                              background-size: 200% 100%; animation: dopa-slide 1.5s linear infinite; }
+#dopa-btn[aria-checked="true"] .knob { transform: translateX(18px); background: #fff; }
+@keyframes dopa-slide { to { background-position: 200% 0; } }
+/* Gradient label that glows slowly so it stands out even when off; stronger glow when on */
+.dopa-label { background: linear-gradient(90deg, #facc15, #f472b6, #38bdf8, #facc15); background-size: 200% 100%;
+              -webkit-background-clip: text; background-clip: text; color: transparent; animation: dopa-slide 3s linear infinite; }
+#dopa-btn { animation: dopa-beckon 2.4s ease-in-out infinite; }
+#dopa-btn[aria-checked="true"] { animation: dopa-blaze .9s ease-in-out infinite; }
+@keyframes dopa-beckon { 0%, 100% { box-shadow: 0 0 0 0 #f472b600; } 50% { box-shadow: 0 0 14px 2px #f472b680; } }
+@keyframes dopa-blaze { 0%, 100% { box-shadow: 0 0 10px 2px #f59e0bcc, 0 0 24px 6px #f43f5e66; }
+                        50% { box-shadow: 0 0 16px 4px #a855f7cc, 0 0 34px 10px #06b6d466; } }
+#dopa-mute { display: none; }
+body.dopa #dopa-mute { display: grid; }
+body.dopa { background: radial-gradient(80% 60% at 50% 40%, #2a0a3a, #000 70%); }
+body.dopa::before { content: ""; position: fixed; inset: -20%; z-index: 0; pointer-events: none; opacity: .35;
+                    background: conic-gradient(from 0deg, #f43f5e, #f59e0b, #22c55e, #06b6d4, #a855f7, #f43f5e);
+                    filter: blur(90px); animation: dopa-spin 8s linear infinite; }
+@keyframes dopa-spin { to { transform: rotate(1turn); } }
+body.dopa .card.top { animation: dopa-glow 1.2s linear infinite; }
+@keyframes dopa-glow {
+  0%, 100% { box-shadow: 0 0 0 3px #f43f5e, 0 0 40px 6px #f43f5e99; }
+  33% { box-shadow: 0 0 0 3px #22c55e, 0 0 40px 6px #22c55e99; }
+  66% { box-shadow: 0 0 0 3px #a855f7, 0 0 40px 6px #a855f799; }
+}
+body.dopa .card .headline { text-shadow: 0 0 18px rgb(255 255 255 / .45); }
+body.dopa .card.fly { transition: transform .42s cubic-bezier(.5,-0.3,.7,1), opacity .42s ease; }
+body.dopa.fever::before { opacity: .7; animation-duration: 1.6s; }
+body.dopa.boom::before { opacity: .9; }
+body.dopa::before { transition: opacity .25s ease-out; }
+/* Countdown: the card edge is the time gauge, with a big number at the top center */
+.card .gauge { display: none; }
+body.dopa .card.top:not(.leaving) .gauge { display: block; }
+/* Sized in CSS so it always follows the card edge, whatever the card size */
+.gauge rect { width: calc(100% - 8px); height: calc(100% - 8px);
+              transition: stroke-dashoffset .1s linear, stroke .2s; filter: drop-shadow(0 0 6px currentColor); }
+#dopa-count { transition: opacity .2s; }
+#dopa-count.tick .num { animation: dopa-tick .45s cubic-bezier(.2,1.6,.4,1); }
+#dopa-count.hurry .num { color: #fb7185; }
+#dopa-count.hurry .disc { box-shadow: 0 0 0 4px #fb7185, 0 0 30px 8px #f43f5e99; }
+@keyframes dopa-tick { 0% { transform: scale(1.8); opacity: .3; } 100% { transform: scale(1); opacity: 1; } }
+/* The card shakes when time is short. Position uses transform, so the shake uses the translate property */
+body.dopa .card.top.jitter { animation: dopa-glow 1.2s linear infinite, dopa-jitter .14s linear infinite; }
+body.dopa .card.top.jitter-hard { animation: dopa-glow .4s linear infinite, dopa-jitter-hard .08s linear infinite; }
+@keyframes dopa-jitter { 0%, 100% { translate: 0 0; } 25% { translate: -2px 1px; } 50% { translate: 2px -1px; } 75% { translate: -1px -2px; } }
+@keyframes dopa-jitter-hard { 0%, 100% { translate: 0 0; } 25% { translate: -5px 2px; } 50% { translate: 4px -3px; } 75% { translate: -3px -4px; } }
+/* Screen edge: pulses red at 1 second left, flashes rainbow colors during FEVER */
+#dopa-edge { position: fixed; inset: 0; z-index: 44; pointer-events: none; opacity: 0; transition: opacity .2s; }
+body.dopa.danger #dopa-edge { opacity: 1; box-shadow: inset 0 0 120px 30px #f43f5ecc; animation: dopa-throb .5s ease-in-out infinite; }
+body.dopa.fever:not(.danger) #dopa-edge { opacity: 1; animation: dopa-fever-edge .5s steps(1) infinite; }
+@keyframes dopa-throb { 50% { box-shadow: inset 0 0 60px 10px #f43f5e66; } }
+@keyframes dopa-fever-edge { 0% { box-shadow: inset 0 0 0 6px #f43f5e, inset 0 0 80px #f43f5e88; }
+                             33% { box-shadow: inset 0 0 0 6px #22c55e, inset 0 0 80px #22c55e88; }
+                             66% { box-shadow: inset 0 0 0 6px #38bdf8, inset 0 0 80px #38bdf888; } }
+/* Effects on each sort: screen shake, flash, big word, confetti, combo */
+.dopa-shake { animation: dopa-shake .35s ease-out; }
+@keyframes dopa-shake { 0%, 100% { transform: none; } 20% { transform: translate(-8px, 4px) rotate(-1deg); }
+                        40% { transform: translate(7px, -5px) rotate(1deg); } 60% { transform: translate(-5px, 3px); } 80% { transform: translate(3px, -2px); } }
+.dopa-flash { position: fixed; inset: 0; z-index: 45; pointer-events: none; transition: opacity .5s ease-out; mix-blend-mode: screen; }
+.dopa-shake-big { animation: dopa-shake-big .5s ease-out; }
+@keyframes dopa-shake-big { 0%, 100% { transform: none; } 15% { transform: translate(-16px, 8px) rotate(-2deg); }
+                            30% { transform: translate(14px, -10px) rotate(2deg); } 50% { transform: translate(-10px, 6px) rotate(-1deg); }
+                            70% { transform: translate(7px, -4px); } 85% { transform: translate(-3px, 2px); } }
+/* Big word: gradient fill with offset color shadows (glitch style). text-shadow would hide the fill, so use filter */
+.dopa-word { position: fixed; left: 50%; top: 42%; z-index: 46; pointer-events: none; font-weight: 900; font-size: clamp(56px, 14vw, 128px);
+             letter-spacing: -.04em; white-space: nowrap; -webkit-background-clip: text; background-clip: text; color: transparent;
+             -webkit-text-stroke: 2px rgb(0 0 0 / .6); filter: drop-shadow(5px 0 0 #22d3eecc) drop-shadow(-5px 0 0 #f0abfccc) drop-shadow(0 6px 14px #000);
+             transition: transform .6s cubic-bezier(.2,1.5,.4,1), opacity .6s ease-in; }
+.dopa-word.tier { top: 60%; font-size: clamp(40px, 9vw, 84px); }
+.dopa-bit { position: fixed; z-index: 46; pointer-events: none; width: 12px; height: 16px; border-radius: 2px;
+            display: grid; place-items: center; line-height: 1;
+            transition: transform 1s cubic-bezier(.1,.7,.3,1), opacity 1s ease-in; }
+.dopa-wave { position: fixed; z-index: 45; pointer-events: none; width: 60px; height: 60px; border-radius: 9999px;
+             border: 8px solid; transition: transform .6s cubic-bezier(.1,.8,.3,1), opacity .6s ease-out; }
+#dopa-combo { transition: transform .25s cubic-bezier(.2,1.8,.4,1), opacity .3s; }
+#dopa-combo.big { font-size: 1.6rem; padding: .25rem 1rem; }
+#dopa-combo.broken { background: #3f3f46; color: #fff; box-shadow: none; }
+@media (prefers-reduced-motion: reduce) {
+  .dopa-shake, .dopa-shake-big, body.dopa::before, body.dopa .card.top, body.dopa .card.top.jitter, body.dopa .card.top.jitter-hard,
+  #dopa-btn, #dopa-btn[aria-checked="true"], #dopa-btn[aria-checked="true"] .dopa-switch, .dopa-label,
+  body.dopa.danger #dopa-edge, body.dopa.fever:not(.danger) #dopa-edge { animation: none; }
+}

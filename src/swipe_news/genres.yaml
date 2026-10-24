@@ -1,0 +1,104 @@
+# category: [sub-genres]. The four categories are fixed (taxonomy.CATEGORIES).
+# short: the short name shown in the charts and in the strip of narrow windows.
+# hints: descriptions of the sub-genre used by the on-device model (ruri-v3-30m) to classify articles.
+#        Editing them makes the next crawl re-classify unread articles.
+# Sports and lifestyle/food have few dedicated feeds; they exist so the model can route articles from general-interest feeds.
+genres:
+  テクノロジー:
+    - name: AI
+      short: AI
+      hints:
+        - "生成AI、人工知能、機械学習、大規模言語モデル、ChatGPT、Gemini、Claude、Copilot"
+        - "AIエージェントで業務を自動化する"
+        - "新しいAIモデルを発表"
+        - "AIの規制や安全性、AIと雇用"
+    - name: 開発・IT業界
+      short: 開発・IT
+      hints:
+        - "ソフトウェア開発、プログラミング、オープンソース、クラウド、データベース、企業向けITサービス"
+        - "サイバー攻撃、不正アクセス、ランサムウェア、情報漏えい、脆弱性"
+        - "システム障害やサービス停止"
+        - "IT企業の提携や事業戦略"
+    - name: ガジェット
+      short: ガジェット
+      hints:
+        - "スマートフォン、iPhone、Android、パソコン、タブレット、イヤホン、カメラ、スマートウォッチ"
+        - "PC周辺機器や家電の新製品とセール情報"
+        - "新型デバイスの発表とスペック"
+    - name: ネット・テック総合
+      short: ネット総合
+      hints:
+        - "インターネットサービス、SNS、YouTube、Webサービス、アプリの新機能"
+        - "キャッシュレス決済、交通系ICカード、通信サービス"
+        - "自動運転、ロボット、テクノロジー企業の動向"
+    - name: 科学
+      short: 科学
+      hints:
+        - "科学、宇宙、ロケット、探査機、天文、物理、化学、生物、化石"
+        - "研究チームが新しい発見を発表"
+        - "時間、暦、自然現象、気候の研究"
+  経済:
+    - name: ビジネス・経済
+      short: ビジネス
+      hints:
+        - "企業の経営、決算、株価、市場、金融、銀行、証券"
+        - "円安、金利、物価、景気、為替、財政"
+        - "株式投資、資産運用、NISA、国債"
+        - "公正取引委員会、企業の不正、業界の再編"
+        - "企業の受賞やビジネス戦略"
+  エンタメ:
+    - name: 音楽
+      short: 音楽
+      hints:
+        - "音楽、アーティスト、バンド、アイドルグループ、新曲、アルバム、ライブ、ツアー、フェス"
+    - name: 映画
+      short: 映画
+      hints:
+        - "映画、新作映画の公開、監督、キャスト、予告編、興行収入、映画祭"
+        - "ドラマの放送と出演者"
+    - name: マンガ・アニメ
+      short: マンガ
+      hints:
+        - "マンガ、漫画家、連載、単行本、アニメ、声優、アニメ化、キャラクター"
+        - "人気作品のコラボグッズ"
+    - name: ゲーム
+      short: ゲーム
+      hints:
+        - "ビデオゲーム、ゲーム機、Nintendo Switch、PlayStation、Xbox、Steam、スマホゲーム、eスポーツ"
+        - "新作ゲームの発売と体験版"
+        - "ゲーム開発会社の動向"
+    - name: 芸能・お笑い・舞台
+      short: 芸能
+      hints:
+        - "芸能人、俳優、女優、タレント、モデル、アナウンサー、お笑い芸人、バラエティ番組"
+        - "有名人がSNSやブログで近況を報告"
+        - "舞台、演劇、ミュージカル、宝塚、歌舞伎"
+    - name: スポーツ
+      short: スポーツ
+      hints:
+        - "スポーツ、プロ野球、サッカー、Jリーグ、メジャーリーグ、選手、監督、コーチ、試合結果"
+        - "オリンピック、テニス、ゴルフ、相撲、ボクシング"
+  社会:
+    - name: 国内
+      short: 国内
+      hints:
+        - "日本の政治、首相、内閣、国会、政党、選挙"
+        - "事件、事故、逮捕、裁判、判決"
+        - "社会問題、少子化、教育、福祉、皇室の話題"
+    - name: 国際
+      short: 国際
+      hints:
+        - "海外のニュース、アメリカ大統領、中国、ロシア、ヨーロッパ、中東"
+        - "戦争、紛争、外交、国際会議、海外の世論調査"
+        - "外国の事件や政治"
+    - name: 地域
+      short: 地域
+      hints:
+        - "都道府県や市町村の出来事、地方自治体、地域のイベント、地元の話題"
+    - name: 暮らし・グルメ
+      short: 暮らし
+      hints:
+        - "暮らし、グルメ、料理、レシピ、外食チェーン、コンビニ、スイーツ、お菓子"
+        - "ファッション、バッグ、雑貨、インテリア、日用品のおすすめ"
+        - "健康、病気、医療、美容"
+        - "占い、雑学、漢字クイズ、季節の話題"
