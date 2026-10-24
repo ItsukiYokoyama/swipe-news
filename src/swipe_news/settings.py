@@ -16,3 +16,5 @@ RETENTION_DAYS = _int("SWIPE_NEWS_RETENTION_DAYS", 7)           # Delete article
 AI_GENRE = _bool("SWIPE_NEWS_AI_GENRE", True)                    # Classify sub-genres with the bundled on-device model
 # Curated list of recommended feeds. Format: catalog/README.md
 CATALOG_URL = os.environ.get("SWIPE_NEWS_CATALOG_URL", "https://ditsuki.com/swipe-news/feeds.json")
+# Public file with the latest version number (see updates.py). Turn the check off in the UI settings
+UPDATE_URL = os.environ.get("SWIPE_NEWS_UPDATE_URL", "https://ditsuki.com/swipe-news/latest.json")

@@ -1086,6 +1086,7 @@ function selectGenre(cat, gen) {
 // ---- Settings: hidden sub-genres / muted words / favorite words (stored on the server, shared across browsers)
 let hiddenGenres = new Set();
 let wordSettings = { mute_words: [], like_words: [] };
+let updateCheck = true;  // Check for new versions (server-side setting)
 
 async function putSettings(body) {
   const res = await fetch("/api/settings", {
@@ -1094,6 +1095,7 @@ async function putSettings(body) {
   if (res) {
     hiddenGenres = new Set(res.hidden_genres);
     wordSettings = { mute_words: res.mute_words, like_words: res.like_words };
+    updateCheck = res.update_check;
   }
   return res;
 }
@@ -1139,6 +1141,7 @@ function openSettings() {
   }
   document.getElementById("mute-words").value = wordSettings.mute_words.join("\n");
   document.getElementById("like-words").value = wordSettings.like_words.join("\n");
+  document.getElementById("update-check").checked = updateCheck;
   document.getElementById("settings").showModal();
 }
 
@@ -1148,7 +1151,8 @@ document.getElementById("settings-all").addEventListener("click", () =>
 document.getElementById("settings-save").addEventListener("click", async () => {
   const hidden = [...document.querySelectorAll("#genre-settings input")].filter(cb => !cb.checked).map(cb => cb.value);
   const lines = id => document.getElementById(id).value.split(/[\n、,]/).map(w => w.trim()).filter(Boolean);
-  const res = await putSettings({ hidden_genres: hidden, mute_words: lines("mute-words"), like_words: lines("like-words") });
+  const res = await putSettings({ hidden_genres: hidden, mute_words: lines("mute-words"), like_words: lines("like-words"),
+                                  update_check: document.getElementById("update-check").checked });
   if (!res) { toast("保存できませんでした"); return; }
   document.getElementById("settings").close();
   if (hiddenGenres.has(genre)) genre = "";
@@ -1157,6 +1161,7 @@ document.getElementById("settings-save").addEventListener("click", async () => {
   renderChips();
   reset();
   toast("設定を保存しました");
+  checkUpdate();  // Hide the "!" right away when the check was turned off
 });
 
 Promise.all([
@@ -1166,6 +1171,7 @@ Promise.all([
   taxonomy = t;
   hiddenGenres = new Set(st.hidden_genres);
   wordSettings = { mute_words: st.mute_words || [], like_words: st.like_words || [] };
+  updateCheck = st.update_check !== false;
   renderChips();
   applyHidden();
 }).catch(() => {});
@@ -1436,6 +1442,19 @@ document.addEventListener("pointermove", e => {
   if (t) showTip(t, e.clientX, e.clientY);
 });
 
+// ---- New-version check: a "!" on the i button and a notice in About when a newer release exists
+async function checkUpdate() {
+  const u = await fetch("/api/update").then(r => r.json()).catch(() => null);
+  const newer = !!u?.newer;
+  document.getElementById("update-badge").classList.toggle("hidden", !newer);
+  document.getElementById("update-badge").classList.toggle("grid", newer);
+  document.getElementById("about-update").classList.toggle("hidden", !newer);
+  if (newer) {
+    document.querySelector("#about-update .update-latest").textContent = u.latest;
+    document.querySelector("#about-update .update-link").href = u.url;
+  }
+}
+
 // ---- About: version, recommended-list URL and the on-device model
 fetch("/api/config").then(r => r.json()).then(({ version, catalog_url, ai_genre }) => {
   document.getElementById("about-version").textContent = `${version}`;
@@ -1449,6 +1468,8 @@ fetch("/api/config").then(r => r.json()).then(({ version, catalog_url, ai_genre 
 renderOpened();
 loadOpened();
 loadFeeds();
+checkUpdate();
+setInterval(checkUpdate, 6 * 60 * 60 * 1000);  // The server asks ditsuki.com at most once a day; this just picks that up
 pollPrefs();
 try { if (localStorage.getItem("swipe-news:dopa") === "1") setDopa(true, { quiet: true }); } catch { /* Stay off if storage can't be read */ }
 fill();

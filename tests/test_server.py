@@ -49,5 +49,7 @@ def test_action_validation(client):
 
 def test_settings_roundtrip(client):
     r = client.put("/api/settings", json={"mute_words": [" a ", "A", "b"], "hidden_genres": ["AI"]})
-    assert r.json() == {"hidden_genres": ["AI"], "mute_words": ["a", "b"], "like_words": []}
+    assert r.json() == {"hidden_genres": ["AI"], "mute_words": ["a", "b"], "like_words": [], "update_check": True}
+    assert client.put("/api/settings", json={"update_check": False}).json()["update_check"] is False
+    assert client.get("/api/update").json()["enabled"] is False
     assert client.put("/api/settings", json={"hidden_genres": ["存在しない"]}).status_code == 400

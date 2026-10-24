@@ -28,6 +28,7 @@ SWIPE_NEWS_DATA=/tmp/swipe-news-dev .venv/bin/python -m swipe_news --port 7871 -
 | `SWIPE_NEWS_RETENTION_DAYS` | 7 | 配信からこの日数を過ぎた記事は消す |
 | `SWIPE_NEWS_AI_GENRE` | true | 内蔵 AI でジャンルを判定・好みを学習する |
 | `SWIPE_NEWS_CATALOG_URL` | https://ditsuki.com/swipe-news/feeds.json | おすすめの一覧 |
+| `SWIPE_NEWS_UPDATE_URL` | https://ditsuki.com/swipe-news/latest.json | 新しいバージョンの確認 (`{"version", "url", "download_url"}`) |
 
 ## テストとコードのチェック
 

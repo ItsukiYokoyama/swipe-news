@@ -8,6 +8,8 @@
 - 取得するメディアの設定 (画面の「メディア」): おすすめの一覧 (https://ditsuki.com/swipe-news/feeds.json) から追加、
   RSS やサイトの URL を入れて追加、ジャンル・総合系・記事の画像・取得するかの変更、外す
 - 追加するたびに「個人で使うこと・利用規約を読んだこと」の確認を必須に
+- 新しいバージョンの確認: 1 日 1 回まで https://ditsuki.com/swipe-news/latest.json を読み、新しい版があれば i に「！」と
+  リリースノートへのリンクを出す (設定でオフにできる)
 - 初めて起動したときに、メディアの追加を案内
 - 自動テスト (pytest)、コードのチェック (ruff)、GitHub Actions
 - LICENSE (GPL-3.0-or-later)、CONTRIBUTING.md、docs/ARCHITECTURE.md

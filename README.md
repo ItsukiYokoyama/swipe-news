@@ -61,6 +61,8 @@ Linux のタスクトレイは環境によって動かないので、そのと�
 
 ### 新しいバージョンへの更新
 
+新しいバージョンが出ると、画面右上の **i** に「！」が出ます。「このアプリについて」のリンクからリリースノートを開き、次の手順で入れ替えてください。
+
 1. 新しいバージョンの zip をダウンロードし、展開する
 2. 今使っているフォルダを消して、新しいフォルダに置き換える（同じ場所に置けば、スタートメニューもそのまま使えます）
 3. `Swipe News.cmd` から一度起動する
@@ -87,7 +89,7 @@ Linux のタスクトレイは環境によって動かないので、そのと�
 
 - **ジャンルのチップ**（上部）: 大ジャンル・小ジャンルで絞り込みます
 - **メディア**: 追加したメディアのジャンル・総合系かどうか・記事の画像・取得するかを変えたり、外したりできます
-- **設定**: 表示しない小ジャンル、ミュートする言葉（含む記事を出さない）、好きな言葉（含む記事を前に出す）
+- **設定**: 表示しない小ジャンル、ミュートする言葉（含む記事を出さない）、好きな言葉（含む記事を前に出す）、新しいバージョンを確認するか
 - **あなたの傾向**（左の列）: 「反応した言葉」を押すと、好きな言葉かミュートに追加できます
 - **i**: このアプリについて（使うときのお願い・ライセンス）
 
@@ -124,6 +126,7 @@ Linux のタスクトレイは環境によって動かないので、そのと�
   - **追加したメディアの RSS を取るとき**（30 分おき）。各メディアの robots.txt を守り、同じサイトへは 2 秒以上あけて 1 本ずつ取ります
   - **「記事の画像」をオンにしたメディア**の、記事ページのプレビュー画像の場所を読むとき。画像は保存せず、表示のたびにブラウザが配信元から取ります
   - **「おすすめから追加」を開いたとき**、`https://ditsuki.com/swipe-news/feeds.json`（おすすめのメディアの公開の一覧）を読みます
+  - **新しいバージョンの確認**（1 日 1 回まで）に、`https://ditsuki.com/swipe-news/latest.json`（最新のバージョン番号だけが書かれた公開ファイル）を読みます。「設定」でオフにすると、この確認もしません
   - **初めて巡回するとき**、ジャンル判定のモデルを Hugging Face からダウンロードします（Windows 版の zip には同梱しているので通信しません）
 - ジャンルの判定と好みの学習は、PC の中で動く AI（ruri-v3-30m）が行います。記事の文面は判定にだけ使い、外部には送りません
 - 記事は配信から 7 日で消します。操作の記録（日時・操作・ジャンル・媒体名など）は文章を持たないので残します
@@ -252,6 +255,8 @@ The system tray may not work in some Linux environments; if so, start it with `s
 
 ### Updating to a new version
 
+When a new version is released, a "!" appears on the **i** button in the top right. Open the release notes from the link in "About" and replace the app as follows.
+
 1. Download and extract the zip of the new version
 2. Delete the folder you're using now and replace it with the new folder (put it in the same place to keep the Start menu entry working)
 3. Start it once from `Swipe News.cmd`
@@ -276,7 +281,7 @@ Quit the old version first (right-click the tray icon → "終了" (Quit)) befor
 
 - **Genre chips** (top): filter by genre and sub-genre
 - **メディア** (Sources): change each source's genre, whether it's a general-interest source, article images, or whether to fetch it; or remove it
-- **設定** (Settings): sub-genres to hide, muted words (hide articles containing them), favorite words (move articles containing them forward)
+- **設定** (Settings): sub-genres to hide, muted words (hide articles containing them), favorite words (move articles containing them forward), whether to check for new versions
 - **あなたの傾向** (Your trends, left column): click a word you reacted to, to add it to your favorite or muted words
 - **i**: about this app (requests for use, licenses)
 
@@ -310,6 +315,7 @@ The extension only watches how the arrow keys are pressed; it never reads the pa
   - **Fetching the RSS feeds of sources you added** (every 30 minutes), respecting each site's robots.txt, one request at a time with at least 2 seconds between requests to the same site
   - **For sources with "article images" on**, reading where each article page's preview image is. Images aren't saved; your browser loads them from the publisher each time they're shown
   - **When you open "Add from recommendations"**, it reads `https://ditsuki.com/swipe-news/feeds.json` (the public list of recommended sources)
+  - **To check for new versions** (at most once a day), it reads `https://ditsuki.com/swipe-news/latest.json` (a public file containing only the latest version number). Turn this off in the settings to skip it
   - **On the first crawl**, it downloads the genre classification model from Hugging Face (the Windows zip bundles it, so no download is needed there)
 - Genre classification and preference learning are done by an AI that runs on your PC (ruri-v3-30m). Article text is used only for classification and never sent anywhere
 - Articles are deleted 7 days after publication. The action history (time, action, genre, source name, ...) contains no article text, so it's kept

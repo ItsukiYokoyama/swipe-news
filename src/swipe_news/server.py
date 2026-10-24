@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import __version__, crawler, db, feeds, genre_ai, settings, taste, taxonomy
+from . import __version__, crawler, db, feeds, genre_ai, settings, taste, taxonomy, updates
 from .paths import STATIC_DIR
 
 log = logging.getLogger(__name__)
@@ -113,6 +113,7 @@ class Settings(BaseModel):
     hidden_genres: list[str] | None = None  # Sub-genres to hide
     mute_words: list[str] | None = None     # Hide articles containing these words
     like_words: list[str] | None = None     # Move articles containing these words forward
+    update_check: bool | None = None        # Check for new versions (updates.py)
 
 
 def _clean_words(words: list[str]) -> list[str]:
@@ -126,7 +127,8 @@ def _clean_words(words: list[str]) -> list[str]:
 
 @app.get("/api/settings")
 def get_settings():
-    return {k: db.get_setting(k, []) for k in ("hidden_genres", "mute_words", "like_words")}
+    return {**{k: db.get_setting(k, []) for k in ("hidden_genres", "mute_words", "like_words")},
+            "update_check": updates.enabled()}
 
 
 @app.put("/api/settings")
@@ -140,7 +142,15 @@ def put_settings(body: Settings):
     for key in ("mute_words", "like_words"):
         if getattr(body, key) is not None:
             db.set_setting(key, _clean_words(getattr(body, key)))
+    if body.update_check is not None:
+        db.set_setting("update_check", body.update_check)
     return get_settings()
+
+
+@app.get("/api/update")
+async def update():
+    """Whether a newer version is available (checks ditsuki.com at most once a day; nothing when turned off)."""
+    return await updates.check()
 
 
 # ---- News sources

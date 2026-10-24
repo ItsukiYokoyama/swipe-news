@@ -14,6 +14,7 @@ src/swipe_news/
   taste.py       話題ごとの好みの学習と「反応した言葉」
   taxonomy.py    ジャンルの定義 (genres.yaml) を読む
   settings.py    環境変数で変えられる設定
+  updates.py     新しいバージョンの確認 (1 日 1 回まで ditsuki.com の latest.json を読む。設定でオフにできる)
   paths.py       ファイルの置き場所
   static/        画面 (index.html / app.js / style.css / tailwind.css)
 frontend/        tailwind.css を作る設定
@@ -85,7 +86,8 @@ SQLite (`news.db`)。`PRAGMA user_version` がスキーマの版 (`db.SCHEMA_VER
 | GET | `/api/news/opened` | 最近開いた記事 |
 | GET | `/api/prefs` | 傾向グラフ (`version` は増えるだけの更新番号) |
 | POST | `/api/crawl` | いま巡回する (終わるまで待つ) |
-| GET / PUT | `/api/settings` | 表示しない小ジャンル・ミュートする言葉・好きな言葉 (送った項目だけ書き換える) |
+| GET / PUT | `/api/settings` | 表示しない小ジャンル・ミュートする言葉・好きな言葉・新しいバージョンを確認するか (送った項目だけ書き換える) |
+| GET | `/api/update` | 新しいバージョンがあるか (`current` `latest` `newer` `url`)。ditsuki.com に問い合わせるのは 1 日 1 回まで |
 | GET | `/api/feeds` | 取得するメディア |
 | GET | `/api/feeds/catalog?refresh=` | おすすめの一覧 (追加済みのものに `added`) |
 | POST | `/api/feeds/inspect` `{"url"}` | URL がフィードか確かめる (ページならフィードを探す。robots.txt も見る) |
