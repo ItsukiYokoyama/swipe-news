@@ -1,6 +1,6 @@
 [project]
 name = "swipe-news"
-version = "0.4.0"
+version = "1.0.0"
 description = "A personal news reader where you sort RSS headlines by swiping cards, with on-device genre classification"
 readme = "README.md"
 license = "GPL-3.0-or-later"
@@ -8,7 +8,7 @@ license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
 authors = [{ name = "Swipe News contributors" }]
 requires-python = ">=3.11"
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
     "Intended Audience :: End Users/Desktop",
     "Natural Language :: Japanese",
