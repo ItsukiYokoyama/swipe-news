@@ -182,6 +182,28 @@ python -m swipe_news --port 7871 --no-tray     # 起動
 - おすすめのメディアの一覧の形式と載せる基準は [catalog/README.md](catalog/README.md)
 - プルリクエストでは、GitHub Actions（`.github/workflows/ci.yml`）がコードのチェックとテストを Windows と Linux で動かします
 
+### 同梱している Python と AI モデル
+
+**Python（Windows 版の zip）**
+
+- python.org の公式の埋め込み用 Python（embeddable package）**3.12.10（64 bit）** を、そのまま `python/` フォルダに入れています。独自の exe は作っていません
+- ビルド（`packaging/build-portable.ps1`）では、zip のハッシュ（SHA-256）を固定して照合し、`python.exe` などに Python Software Foundation の署名があることも確かめます
+- `python312._pth` で読み込む場所を zip の中だけに限っているので、PC に入っているほかの Python や `PYTHONPATH` の影響を受けません
+- ライブラリ（FastAPI・uvicorn・feedparser・onnxruntime など）は `python/Lib/site-packages` に、あらかじめ .pyc にしたうえで同梱しています
+- pip で入れる場合は、手元の Python 3.11 以上で動きます
+
+**AI モデル**
+
+- 使っているのは [ruri-v3-30m](https://huggingface.co/cl-nagoya/ruri-v3-30m)（名古屋大学の日本語の文章埋め込みモデル、約 3,000 万パラメーター、Apache License 2.0）です。
+  文章を作るのではなく、文章の意味をベクトル（数の並び）に変えるための言語モデルです。記事の文面を書き換えたり、要約したりはしません
+- 用途は 2 つだけです: **小ジャンルの判定**（記事のタイトルと概要のベクトルを、`genres.yaml` の説明文のベクトルと比べる）と、
+  **好みの学習**（開いた記事・興味なしにした記事に近いかどうか）
+- ONNX に変換して int8 に量子化したもの（[sirasagi62/ruri-v3-30m-ONNX](https://huggingface.co/sirasagi62/ruri-v3-30m-ONNX)、約 37MB + トークナイザー約 7MB）を、
+  onnxruntime で **CPU だけで** 動かします。GPU は要りません。1 記事あたり 5 ミリ秒ほどです
+- Windows 版は zip にモデルを同梱しています。pip で入れた場合は、初回の巡回のときに Hugging Face からダウンロードします。
+  どちらも版（リビジョン）とファイルのハッシュを固定して照合しています（`genre_ai.py`）
+- モデルは PC の中だけで動き、記事やデータを外部の AI サービスに送ることはありません。`SWIPE_NEWS_AI_GENRE=false` で止めることもできます（メディアに設定したジャンルをそのまま使います）
+
 ### 既知の制約
 
 - PC で使うアプリです。スマホのブラウザでは動きを確かめていません（スワイプから新しいタブを開けないなど、挙動が安定しないため）
@@ -351,6 +373,28 @@ python -m swipe_news --port 7871 --no-tray     # run
 - On pull requests, GitHub Actions (`.github/workflows/ci.yml`) runs the lint and tests on Windows and Linux
 
 The user interface and documentation are in Japanese.
+
+### Bundled Python and AI model
+
+**Python (Windows zip)**
+
+- The official python.org embeddable package, **Python 3.12.10 (64-bit)**, is included as-is in the `python/` folder. There are no custom executables
+- The build (`packaging/build-portable.ps1`) checks the zip against a pinned SHA-256 hash and verifies the Python Software Foundation signature on `python.exe` and friends
+- `python312._pth` limits imports to the zip's own folders, so other Python installations and `PYTHONPATH` on the PC have no effect
+- Libraries (FastAPI, uvicorn, feedparser, onnxruntime, ...) are bundled in `python/Lib/site-packages`, precompiled to .pyc
+- A pip install runs on your own Python 3.11 or later
+
+**AI model**
+
+- The model is [ruri-v3-30m](https://huggingface.co/cl-nagoya/ruri-v3-30m), a Japanese sentence embedding model from Nagoya University (about 30M parameters, Apache License 2.0).
+  It's a language model that turns the meaning of text into vectors; it doesn't generate text. It never rewrites or summarizes articles
+- It's used for two things only: **sub-genre classification** (comparing the vector of an article's title and summary with the descriptions in `genres.yaml`)
+  and **learning your preferences** (how close an article is to ones you opened or skipped)
+- An ONNX int8 conversion ([sirasagi62/ruri-v3-30m-ONNX](https://huggingface.co/sirasagi62/ruri-v3-30m-ONNX), about 37 MB plus a 7 MB tokenizer)
+  runs with onnxruntime **on the CPU only**. No GPU is needed; it takes about 5 ms per article
+- The Windows zip bundles the model. A pip install downloads it from Hugging Face on the first crawl.
+  Either way, the revision and file hashes are pinned and verified (`genre_ai.py`)
+- The model runs only on your PC; articles and data are never sent to an external AI service. Set `SWIPE_NEWS_AI_GENRE=false` to turn it off (each source's configured genre is used as-is)
 
 ### Known limitations
 
