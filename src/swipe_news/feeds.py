@@ -1,4 +1,5 @@
-"""News sources: the recommended list (ditsuki.com), checking URLs entered by hand, and importing feeds.yaml from 0.3.
+"""News sources: the recommended list (ditsuki.com) and checking URLs entered by hand. The app starts with no sources;
+the user adds every one of them.
 
 Every source is added only after the user confirms personal use and that they have read the publisher's terms (UI and API).
 Messages in FeedError are shown to the user, so they are in Japanese like the rest of the UI.
@@ -10,10 +11,9 @@ from urllib.parse import urljoin, urlsplit
 
 import feedparser
 import httpx
-import yaml
 from bs4 import BeautifulSoup
 
-from . import db, net, paths, settings, taxonomy
+from . import db, net, settings, taxonomy
 
 log = logging.getLogger(__name__)
 
@@ -156,28 +156,3 @@ async def add(*, url: str, name: str, genre: str, mixed: bool = False, og_image:
                            catalog_id=catalog_id)
     except sqlite3.IntegrityError as e:
         raise FeedError("同じ名前か URL のメディアが、もう追加されています") from e
-
-
-# ---- Migration from 0.3
-
-
-def import_legacy_yaml() -> int:
-    """Import the feeds from feeds.yaml (0.3 and earlier, in the data folder) into the database, then rename the file."""
-    src = paths.LEGACY_FEEDS_FILE
-    if not src.exists() or db.list_feeds():
-        return 0
-    with open(src, encoding="utf-8") as f:
-        conf = yaml.safe_load(f) or {}
-    count = 0
-    for item in conf.get("feeds") or []:
-        if not taxonomy.category_of(item.get("genre", "")) or item.get("mode") == "ai_summary":
-            continue
-        try:
-            db.add_feed(name=item["name"], url=item["url"], genre=item["genre"], mixed=item.get("mixed"),
-                        og_image=item.get("og_image"), terms_url=item.get("terms_url"), source="imported")
-            count += 1
-        except (KeyError, sqlite3.IntegrityError) as e:
-            log.warning("skipping feeds.yaml item: %s (%s)", item.get("name"), e)
-    src.rename(src.with_name("feeds.yaml.imported"))
-    log.info("imported %d sources from feeds.yaml (0.3)", count)
-    return count

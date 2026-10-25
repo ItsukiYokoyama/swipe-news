@@ -21,7 +21,6 @@ log = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     db.init()
-    feeds.import_legacy_yaml()
     task = asyncio.create_task(crawler.loop(settings.CRAWL_INTERVAL_MIN))
     yield
     task.cancel()

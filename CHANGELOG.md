@@ -23,7 +23,7 @@
 
 ### 変更
 - パッケージ名を `news` から `swipe_news` に、フォルダを `src/swipe_news/` に (起動は `python -m swipe_news` / `swipe-news`)
-- 初期設定のメディアを空に (0.3 のデータのフォルダの `feeds.yaml` は、初回の起動でそのまま取り込む)
+- 初期設定のメディアを空に。メディアは利用者が自分で追加する (0.3 の `feeds.yaml` も取り込まない)
 - 記事の画像 (og:image) は、メディアごとに既定でオフ
 - 画面の CSS (Tailwind) と QR コードのライブラリを CDN から読むのをやめ、Tailwind は作った CSS を同梱 (オフラインでも崩れない)
 - 画面を index.html / app.js / style.css に分けた

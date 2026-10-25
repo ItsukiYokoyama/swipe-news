@@ -8,7 +8,7 @@ src/swipe_news/
   server.py      FastAPI。画面 (static/) と API
   crawler.py     巡回: フィードを取って DB に保存 → 内蔵 AI でジャンル判定と好みの計算
   net.py         配信元へのアクセス: robots.txt の確認、同じサイトへの間隔、通信エラーのやり直し
-  feeds.py       取得するメディアの設定: おすすめの一覧の読み込み、手入力の URL の確認、0.3 の feeds.yaml の取り込み
+  feeds.py       取得するメディアの設定: おすすめの一覧の読み込み、手入力の URL の確認
   db.py          SQLite (スキーマとその版、カードの並び順、操作の記録、学習の重み、傾向グラフ)
   genre_ai.py    内蔵モデル ruri-v3-30m (ONNX int8) で記事をベクトルにし、小ジャンルを判定する
   taste.py       話題ごとの好みの学習と「反応した言葉」
@@ -64,7 +64,7 @@ tests/           自動テスト (pytest)
 
 SQLite (`news.db`)。`PRAGMA user_version` がスキーマの版 (`db.SCHEMA_VERSION`)。
 0.3 までの DB (版 0) は、起動したときに AI 要約の列と大ジャンル単位の重みの表を消し、記事と操作の記録はそのまま使う。
-0.3 のデータのフォルダにあった `feeds.yaml` は、メディアの表 (`feeds`) に取り込んで `feeds.yaml.imported` に名前を変える。
+メディアの表 (`feeds`) は最初は空で、利用者が追加したものだけが入る (0.3 の `feeds.yaml` は取り込まない)。
 
 | 表 | 内容 |
 |---|---|

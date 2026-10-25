@@ -36,5 +36,3 @@ DB_PATH = DATA_DIR / "news.db"
 MODELS_DIR = DATA_DIR / "models"
 LOG_PATH = DATA_DIR / "swipe-news.log"
 SETTINGS_PATH = DATA_DIR / "settings.json"
-# Feed settings used up to 0.3. Imported into the database on first launch (feeds.import_legacy_yaml)
-LEGACY_FEEDS_FILE = DATA_DIR / "feeds.yaml"

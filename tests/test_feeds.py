@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from conftest import rss
-from swipe_news import db, feeds, net, paths
+from swipe_news import db, feeds, net
 
 CATALOG_FILE = Path(__file__).resolve().parent.parent / "catalog" / "feeds.json"
 
@@ -65,23 +65,17 @@ def test_add_rejects_duplicates(web):
         asyncio.run(feeds.add(url="https://news.example/rss", name="別の名前", genre="AI"))
 
 
-def test_import_legacy_yaml():
-    paths.LEGACY_FEEDS_FILE.write_text("""
-feeds:
-  - name: A
-    url: https://a.example/feed
-    genre: AI
-    og_image: true
-  - name: 要約
-    url: https://gov.example/feed
-    genre: 国内
-    mode: ai_summary
-  - name: 知らないジャンル
-    url: https://b.example/feed
-    genre: 消えたジャンル
-""", encoding="utf-8")
-    assert feeds.import_legacy_yaml() == 1
-    [feed] = db.list_feeds()
-    assert feed["name"] == "A" and feed["og_image"] and feed["source"] == "imported"
-    assert not paths.LEGACY_FEEDS_FILE.exists()
-    assert feeds.import_legacy_yaml() == 0
+def test_starts_with_no_sources_even_with_old_feeds_yaml(data_dir, monkeypatch):
+    # Sources are only ever added by the user; a feeds.yaml left by an old version is ignored
+    (data_dir / "feeds.yaml").write_text("feeds:\n  - name: A\n    url: https://a.example/feed\n    genre: AI\n", encoding="utf-8")
+    from fastapi.testclient import TestClient
+
+    from swipe_news import crawler, server
+
+    async def idle(*args, **kwargs):
+        return {"status": "ok"}
+
+    monkeypatch.setattr(crawler, "loop", idle)
+    with TestClient(server.app) as c:
+        assert c.get("/api/feeds").json() == []
+    assert db.list_feeds() == []

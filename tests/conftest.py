@@ -15,7 +15,6 @@ def data_dir(tmp_path, monkeypatch):
     """An empty data folder and database for each test."""
     monkeypatch.setattr(paths, "DATA_DIR", tmp_path)
     monkeypatch.setattr(paths, "DB_PATH", tmp_path / "news.db")
-    monkeypatch.setattr(paths, "LEGACY_FEEDS_FILE", tmp_path / "feeds.yaml")
     db.init()
     return tmp_path
 
