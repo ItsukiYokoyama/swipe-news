@@ -4,6 +4,7 @@ HTTPException messages are shown in the UI, so they are in Japanese like the res
 """
 import asyncio
 import logging
+import threading
 from contextlib import asynccontextmanager
 from typing import Literal
 
@@ -12,7 +13,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import __version__, crawler, db, feeds, genre_ai, paths, settings, taste, taxonomy, updates
+from . import __version__, crawler, db, feeds, genre_ai, paths, settings, taste, taxonomy, uninstall, updates
 from .paths import STATIC_DIR
 
 log = logging.getLogger(__name__)
@@ -53,16 +54,62 @@ def extension():
     return {"folder": str(d) if d else None}
 
 
-@app.post("/api/extension/open", status_code=204)
-def open_extension_folder(x_swipe_news: str | None = Header(default=None)):
+def _only_from_ui(x_swipe_news: str | None):
     # The custom header keeps other web pages from triggering this (a cross-site request can't set it without CORS)
     if x_swipe_news != "1":
         raise HTTPException(403, "この画面からだけ使えます")
+
+
+@app.post("/api/extension/open", status_code=204)
+def open_extension_folder(x_swipe_news: str | None = Header(default=None)):
+    _only_from_ui(x_swipe_news)
     d = paths.extension_dir()
     if not d:
         raise HTTPException(404, "拡張機能のフォルダが見つかりませんでした")
     from .desktop import reveal
     reveal(d)
+
+
+@app.get("/api/install")
+def install_info():
+    """Where the app, its data and its Start menu entry are (shown in About, with how to uninstall)."""
+    lnk = paths.start_menu_shortcut()
+    return {"portable": paths.PORTABLE, "app_dir": str(paths.app_dir()), "data_dir": str(paths.DATA_DIR),
+            "start_menu": str(lnk) if lnk and lnk.exists() else None}
+
+
+class UninstallRequest(BaseModel):
+    delete_data: bool = False  # Also delete the history, learning and settings
+
+
+@app.post("/api/uninstall")
+def uninstall_app(body: UninstallRequest, x_swipe_news: str | None = Header(default=None)):
+    """Uninstall the Windows zip build: remove the Start menu entry, quit, and delete the app folder after exiting."""
+    _only_from_ui(x_swipe_news)
+    try:
+        result = uninstall.start(body.delete_data)
+    except uninstall.UninstallError as e:
+        raise HTTPException(400, str(e)) from e
+    from . import desktop
+    threading.Timer(1.0, lambda: desktop.request_quit()).start()  # After this response has been sent
+    return result
+
+
+@app.post("/api/install/open/{what}", status_code=204)
+def open_install_folder(what: Literal["app", "data", "start_menu"], x_swipe_news: str | None = Header(default=None)):
+    """Open the app folder or the data folder, or show the Start menu entry, in the file manager."""
+    _only_from_ui(x_swipe_news)
+    from .desktop import open_folder, reveal
+    if what == "app":
+        open_folder(paths.app_dir())
+    elif what == "data":
+        paths.DATA_DIR.mkdir(parents=True, exist_ok=True)
+        open_folder(paths.DATA_DIR)
+    else:
+        lnk = paths.start_menu_shortcut()
+        if not lnk or not lnk.exists():
+            raise HTTPException(404, "スタートメニューに登録されていません")
+        reveal(lnk)
 
 
 @app.get("/api/genres")

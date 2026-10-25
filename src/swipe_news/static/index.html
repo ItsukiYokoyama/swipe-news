@@ -235,6 +235,20 @@
       <p class="mb-4 text-xs leading-relaxed text-white/60">
         記事のタブから十字キーで戻れる Chrome 拡張機能を同梱しています。<button id="about-ext" class="underline underline-offset-2">入れ方を見る</button>
       </p>
+      <section class="mb-4 rounded-xl bg-white/5 p-3 text-xs leading-relaxed ring-1 ring-white/10">
+        <h3 class="mb-2 text-sm font-bold">インストール場所</h3>
+        <dl id="install-paths" class="space-y-2"></dl>
+        <h3 class="mb-1 mt-4 text-sm font-bold">アンインストール</h3>
+        <div id="uninstall-easy" class="hidden">
+          <p class="text-white/70">ボタンを押すと、アプリを終了して、アプリのフォルダとスタートメニューの「Swipe News」を削除します。</p>
+          <button id="uninstall-btn" class="mt-2 w-full rounded-full bg-rose-500/20 py-2 text-sm font-bold text-rose-100 ring-1 ring-rose-300/50">アンインストールする</button>
+        </div>
+        <details id="uninstall-manual" class="mt-2">
+          <summary class="cursor-pointer text-white/60">手で削除する場合</summary>
+          <ol id="uninstall-steps" class="mt-1 list-decimal space-y-1 pl-4 text-white/70"></ol>
+        </details>
+        <p class="mt-2 text-white/50">レジストリなど、ほかの場所には何も書き込んでいません。</p>
+      </section>
       <p class="text-xs leading-relaxed text-white/50">
         ライセンス: GNU General Public License v3.0 以降 (GPL-3.0-or-later)。ジャンル判定のモデル ruri-v3-30m は Apache License 2.0、
         画面の Tailwind CSS は MIT License です。詳しくは同梱の LICENSE と THIRD_PARTY_NOTICES.md を見てください。
@@ -279,6 +293,35 @@
       </div>
     </div>
   </dialog>
+
+  <dialog id="uninstall-dialog" class="w-[min(92vw,480px)] rounded-2xl bg-zinc-900 p-0 text-white backdrop:bg-black/70">
+    <div class="p-5 text-sm leading-relaxed">
+      <h2 class="mb-2 text-lg font-bold">Swipe News をアンインストールしますか？</h2>
+      <p class="mb-2 text-white/75">アプリを終了して、次のものを削除します。</p>
+      <ul class="mb-4 list-disc space-y-1 pl-5 text-white/75">
+        <li>アプリのフォルダ <span id="uninstall-app" class="block break-all text-xs text-white/50"></span></li>
+        <li>スタートメニューの「Swipe News」</li>
+      </ul>
+      <label class="mb-1 flex items-start gap-2 rounded-xl bg-white/5 p-3 ring-1 ring-white/10">
+        <input id="uninstall-data" type="checkbox" class="mt-1 h-4 w-4 shrink-0 accent-rose-400">
+        <span>記録・学習・設定・メディアの一覧も削除する
+          <span class="block text-xs text-white/50">もう使わない場合はチェックを入れてください。残しておくと、もう一度ダウンロードしたときに続きから使えます。</span></span>
+      </label>
+      <p id="uninstall-error" class="mt-2 hidden text-rose-300" role="alert"></p>
+      <div class="mt-4 flex gap-2">
+        <form method="dialog" class="flex-1"><button class="w-full rounded-full bg-white/10 py-2.5 font-bold">やめる</button></form>
+        <button id="uninstall-go" class="flex-1 rounded-full bg-rose-500 py-2.5 font-bold text-white disabled:opacity-50">アンインストール</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="uninstalled" class="fixed inset-0 z-50 hidden place-items-center bg-black p-6 text-center">
+    <div class="max-w-md text-sm leading-relaxed text-white/80">
+      <p class="mb-3 text-2xl font-bold text-white">アンインストールしました</p>
+      <p class="mb-3">アプリを終了しました。数秒でアプリのフォルダも消えます。このタブは閉じてかまいません。</p>
+      <p class="text-white/55">Chrome 拡張機能「十字キーで戻る」を入れていた場合は、Chrome のアドレスバーに chrome://extensions と入れて開き、「削除」を押してください。</p>
+    </div>
+  </div>
 
   <template id="card-tpl">
     <article class="card absolute inset-0 overflow-hidden rounded-[28px] bg-black shadow-2xl shadow-black/60 ring-1 ring-white/10">

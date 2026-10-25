@@ -1542,6 +1542,79 @@ setTimeout(() => {
   document.getElementById("ext-btn").classList.toggle("flex", show);
 }, 1500);
 
+// ---- About: where things are installed, and how to uninstall
+async function renderInstall() {
+  const info = await api("/api/install").catch(() => null);
+  if (!info) return;
+  const dl = document.getElementById("install-paths");
+  dl.innerHTML = "";
+  const row = (label, path, what, note) => {
+    const dt = make("dt", "flex items-center gap-2 font-bold text-white/80", label);
+    if (path) {
+      const btn = make("button", "rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-normal", "開く");
+      btn.addEventListener("click", async () => {
+        const res = await fetch(`/api/install/open/${what}`, { method: "POST", headers: { "X-Swipe-News": "1" } }).catch(() => null);
+        if (!res?.ok) toast("開けませんでした");
+      });
+      dt.append(btn);
+    }
+    const dd = make("dd", "break-all text-white/55", path || "—");
+    if (note) dd.append(make("span", "block text-white/40", note));
+    dl.append(dt, dd);
+  };
+  row("アプリ", info.app_dir, "app", info.portable ? "zip を展開したフォルダです" : "pip で入れた Python のライブラリの場所です");
+  row("データ", info.data_dir, "data", "操作の記録・学習・設定・メディアの一覧・ログ。アプリを入れ替えても残ります");
+  if (info.portable) row("スタートメニュー", info.start_menu, "start_menu", info.start_menu ? "" : "まだ登録されていません");
+  const steps = info.portable ? [
+    "タスクトレイの Swipe News のアイコンを右クリック →「終了」",
+    "「アプリ」のフォルダをまるごと削除",
+    "スタートメニューの「Swipe News」を削除 (上の「開く」で場所を開けます)",
+    "記録や設定も消すなら、「データ」のフォルダも削除",
+    "Chrome 拡張機能を入れていれば、chrome://extensions で削除",
+  ] : [
+    "アプリを終了 (タスクトレイの「終了」か、起動したターミナルで Ctrl+C)",
+    "pip uninstall swipe-news",
+    "記録や設定も消すなら、「データ」のフォルダも削除",
+    "Chrome 拡張機能を入れていれば、chrome://extensions で削除",
+  ];
+  const ol = document.getElementById("uninstall-steps");
+  ol.innerHTML = "";
+  for (const s of steps) ol.append(make("li", "", s));
+  // The zip build can uninstall itself; a pip install shows the manual steps only
+  document.getElementById("uninstall-easy").classList.toggle("hidden", !info.portable);
+  document.getElementById("uninstall-manual").open = !info.portable;
+  document.getElementById("uninstall-app").textContent = info.app_dir;
+}
+document.getElementById("about-btn").addEventListener("click", renderInstall);
+
+const uninstallDialog = document.getElementById("uninstall-dialog");
+document.getElementById("uninstall-btn").addEventListener("click", () => {
+  document.getElementById("uninstall-data").checked = false;
+  document.getElementById("uninstall-error").classList.add("hidden");
+  document.getElementById("about").close();
+  uninstallDialog.showModal();
+});
+document.getElementById("uninstall-go").addEventListener("click", async e => {
+  const btn = e.currentTarget;
+  const error = document.getElementById("uninstall-error");
+  btn.disabled = true;
+  try {
+    const res = await fetch("/api/uninstall", {
+      method: "POST", headers: { "Content-Type": "application/json", "X-Swipe-News": "1" },
+      body: JSON.stringify({ delete_data: document.getElementById("uninstall-data").checked }),
+    });
+    if (!res.ok) throw new Error((await res.json().catch(() => null))?.detail || "アンインストールできませんでした");
+    uninstallDialog.close();
+    const done = document.getElementById("uninstalled");
+    done.classList.remove("hidden");
+    done.classList.add("grid");
+  } catch (err) {
+    error.textContent = err.message === "Failed to fetch" ? "アプリに接続できませんでした" : err.message;
+    error.classList.remove("hidden");
+    btn.disabled = false;
+  }
+});
+
 // ---- About: version, recommended-list URL and the on-device model
 fetch("/api/config").then(r => r.json()).then(({ version, catalog_url, ai_genre }) => {
   document.getElementById("about-version").textContent = `${version}`;

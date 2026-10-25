@@ -15,6 +15,7 @@ src/swipe_news/
   taxonomy.py    ジャンルの定義 (genres.yaml) を読む
   settings.py    環境変数で変えられる設定
   updates.py     新しいバージョンの確認 (1 日 1 回まで ditsuki.com の latest.json を読む。設定でオフにできる)
+  uninstall.py   Windows 版のアンインストール (「i」から。このアプリが作ったものだけを消す)
   paths.py       ファイルの置き場所
   static/        画面 (index.html / app.js / style.css / tailwind.css)
 frontend/        tailwind.css を作る設定
@@ -94,6 +95,9 @@ SQLite (`news.db`)。`PRAGMA user_version` がスキーマの版 (`db.SCHEMA_VER
 | POST | `/api/feeds` | メディアを追加する (`agreed: true` が必要)。手入力の URL はフィードか確かめてから、おすすめの一覧のものはそのまま追加する。追加したらすぐ巡回する |
 | GET | `/api/extension` | 同梱の Chrome 拡張機能のフォルダ (`folder`。pip で入れたときは null) |
 | POST | `/api/extension/open` | そのフォルダをエクスプローラーで選んだ状態で開く (`X-Swipe-News: 1` のヘッダーが必要。ほかのサイトから呼ばせないため) |
+| GET | `/api/install` | アプリ・データのフォルダ・スタートメニューの場所 (`portable` `app_dir` `data_dir` `start_menu`)。「i」に出す |
+| POST | `/api/install/open/{app\|data\|start_menu}` | その場所をエクスプローラーで開く (`X-Swipe-News: 1` のヘッダーが必要) |
+| POST | `/api/uninstall` `{"delete_data"}` | zip 版のアンインストール (`X-Swipe-News: 1` が必要)。スタートメニューの登録を消し、アプリを終了する。見えない PowerShell がアプリの終了を待って、アプリのフォルダと (選べば) データのフォルダのうちこのアプリが作ったファイルだけを消す (`uninstall.py`) |
 | POST | `/api/feeds/bulk` `{"feeds": [...], "agreed"}` | まとめて追加する (おすすめの「すべて追加」)。`{"added", "errors"}` を返す |
 | PATCH / DELETE | `/api/feeds/{id}` | ジャンル・総合系・記事の画像・取得するかを変える / 外す (未読の記事も消す) |
 

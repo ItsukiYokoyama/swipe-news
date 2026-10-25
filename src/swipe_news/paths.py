@@ -13,6 +13,18 @@ BUNDLED_MODELS_DIR = PACKAGE_DIR / "models"
 PORTABLE = (Path(sys.executable).resolve().parent / "swipe-news-portable").exists()
 
 
+def app_dir() -> Path:
+    """Where the app itself is: the extracted folder of the Windows zip, or this package for a pip install."""
+    return Path(sys.executable).resolve().parent.parent if PORTABLE else PACKAGE_DIR
+
+
+def start_menu_shortcut() -> Path | None:
+    """The Start menu entry the Windows zip build creates on first launch."""
+    if sys.platform != "win32" or not PORTABLE:
+        return None
+    return Path(os.environ["APPDATA"]) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "Swipe News.lnk"
+
+
 def extension_dir() -> Path | None:
     """The bundled Chrome extension: next to the python folder in the Windows zip, or at the top of a source checkout.
     A pip install doesn't include it."""

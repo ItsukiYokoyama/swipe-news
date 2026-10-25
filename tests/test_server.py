@@ -60,6 +60,26 @@ def test_extension_folder(client, monkeypatch):
     assert [str(p) for p in opened] == [folder]
 
 
+def test_install_info_and_open(client, monkeypatch, data_dir):
+    from swipe_news import desktop
+    opened = []
+    monkeypatch.setattr(desktop, "open_folder", opened.append)
+    info = client.get("/api/install").json()
+    assert info["portable"] is False and info["start_menu"] is None  # A source checkout isn't the zip build
+    assert info["data_dir"] == str(data_dir) and info["app_dir"].endswith("swipe_news")
+    assert client.post("/api/install/open/data").status_code == 403
+    assert client.post("/api/install/open/data", headers={"X-Swipe-News": "1"}).status_code == 204
+    assert client.post("/api/install/open/start_menu", headers={"X-Swipe-News": "1"}).status_code == 404
+    assert client.post("/api/install/open/other", headers={"X-Swipe-News": "1"}).status_code == 422
+    assert opened == [data_dir]
+
+
+def test_uninstall_endpoint(client):
+    assert client.post("/api/uninstall", json={}).status_code == 403  # Other pages can't set the header
+    r = client.post("/api/uninstall", json={}, headers={"X-Swipe-News": "1"})
+    assert r.status_code == 400 and "zip" in r.json()["detail"]  # A source checkout can't uninstall itself
+
+
 def test_inspect_error_message(client, web):
     r = client.post("/api/feeds/inspect", json={"url": "notaurl"})
     assert r.status_code == 400 and "URL" in r.json()["detail"]

@@ -46,6 +46,8 @@ GitHub で配布しています。
 
 ブラウザで画面が開き、タスクトレイにアイコンが出ます。初回に、スタートメニューへ「Swipe News」を登録します。
 「許可する」にしないで展開したときは、最初の起動で「発行元を確認できませんでした」と出ます。「実行」を押せば、次からは出ません。
+インストーラーは使わず、展開したフォルダがそのままアプリの場所です。アプリ・データの場所は、画面右上の **i** で見られます。
+アンインストールも **i** の「アンインストールする」からできます（アプリのフォルダとスタートメニューの登録を消します。記録や設定も消すかは選べます）。
 Python ごと同梱しているので、ほかに入れるものはありません（同梱しているのは python.org の公式の Python で、独自の exe は入っていません）。
 
 ### macOS / Linux
@@ -266,6 +268,8 @@ Swipe News is distributed on GitHub.
 
 The screen opens in your browser and an icon appears in the system tray. On first launch, "Swipe News" is added to the Start menu.
 If you extracted it without "Unblock", Windows says "The publisher could not be verified" on the first launch. Click "Run" and it won't appear again.
+There's no installer: the extracted folder is the app. The **i** button in the top right shows where the app and its data are.
+To uninstall, use "アンインストールする" (Uninstall) under **i**: it deletes the app folder and the Start menu entry, and optionally your history and settings.
 Python is bundled, so you don't need to install anything else (it's the official Python from python.org; there are no custom executables).
 
 ### macOS / Linux

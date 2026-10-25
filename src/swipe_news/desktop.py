@@ -116,7 +116,7 @@ def register_start_menu(settings: dict):
         return
     pythonw = Path(sys.executable).resolve().with_name("pythonw.exe")
     target = f"{pythonw} -m swipe_news"
-    lnk = Path(os.environ["APPDATA"]) / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "Swipe News.lnk"
+    lnk = paths.start_menu_shortcut()
     if settings.get("start_menu") == target and lnk.exists():
         return
     lnk.parent.mkdir(parents=True, exist_ok=True)
@@ -161,7 +161,19 @@ def unblock_app_folder(settings: dict):
         log.info("removed the downloaded-file mark from %d files in %s", count, root)
 
 
+_quit = None  # Set while running: stops the server (and the tray icon)
+
+
+def request_quit():
+    """Quit the whole app (used after uninstalling from the UI)."""
+    if _quit:
+        _quit()
+    else:
+        os._exit(0)
+
+
 def run_tray(server: Server, url: str):
+    global _quit
     import pystray
     from PIL import Image
 
@@ -176,6 +188,7 @@ def run_tray(server: Server, url: str):
         pystray.MenuItem("終了", quit_app),
     )
     icon = pystray.Icon("SwipeNews", Image.open(paths.STATIC_DIR / "icon-192.png"), "Swipe News", menu)
+    _quit = lambda: quit_app(icon, None)  # noqa: E731
     icon.run()
 
 
@@ -222,6 +235,8 @@ def main(argv: list[str] | None = None):
     threading.Thread(target=after_start, daemon=True).start()
 
     if args.no_tray:
+        global _quit
+        _quit = server.stop
         try:
             while server.thread.is_alive():
                 time.sleep(0.5)
