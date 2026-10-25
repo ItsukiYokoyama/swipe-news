@@ -1,5 +1,8 @@
 /* Swipe News UI: what Tailwind classes can't express (animations, Dopa mode effects, ...) */
 html, body { background: #000; overscroll-behavior: none; height: 100%; overflow: hidden; }
+/* Dark native controls: without this, the open list of a <select> is white text on a white background */
+html { color-scheme: dark; }
+option, optgroup { background: #18181b; color: #fff; }
 #chips { scrollbar-width: none; }
 #chips::-webkit-scrollbar { display: none; }
 .chip[aria-pressed="true"] { background: #fff; color: #000; }

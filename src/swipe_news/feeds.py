@@ -139,12 +139,17 @@ async def inspect(url: str) -> dict:
 async def add(*, url: str, name: str, genre: str, mixed: bool = False, og_image: bool = False,
               terms_url: str | None = None, site_url: str | None = None, source: str = "manual",
               catalog_id: str | None = None) -> dict:
-    """Add the source after checking that it is a feed (robots.txt included)."""
+    """Add the source. URLs entered by hand are checked first (is it a feed, robots.txt); sources from the
+    recommended list are added as they are (the list was checked when it was made, and the crawler checks
+    robots.txt before every fetch)."""
     check_genre(genre)
     name = (name or "").strip()
     if not name or len(name) > 60:
         raise FeedError("名前は 1〜60 文字で入れてください")
-    found = await inspect(url)
+    if source == "catalog":
+        found = {"url": check_url(url), "site_url": None}
+    else:
+        found = await inspect(url)
     try:
         return db.add_feed(name=name, url=found["url"], site_url=site_url or found["site_url"], genre=genre,
                            mixed=mixed, og_image=og_image, terms_url=terms_url or None, source=source,

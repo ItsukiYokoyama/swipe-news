@@ -91,7 +91,10 @@ SQLite (`news.db`)。`PRAGMA user_version` がスキーマの版 (`db.SCHEMA_VER
 | GET | `/api/feeds` | 取得するメディア |
 | GET | `/api/feeds/catalog?refresh=` | おすすめの一覧 (追加済みのものに `added`) |
 | POST | `/api/feeds/inspect` `{"url"}` | URL がフィードか確かめる (ページならフィードを探す。robots.txt も見る) |
-| POST | `/api/feeds` | メディアを追加する (`agreed: true` が必要)。追加したらすぐ巡回する |
+| POST | `/api/feeds` | メディアを追加する (`agreed: true` が必要)。手入力の URL はフィードか確かめてから、おすすめの一覧のものはそのまま追加する。追加したらすぐ巡回する |
+| GET | `/api/extension` | 同梱の Chrome 拡張機能のフォルダ (`folder`。pip で入れたときは null) |
+| POST | `/api/extension/open` | そのフォルダをエクスプローラーで選んだ状態で開く (`X-Swipe-News: 1` のヘッダーが必要。ほかのサイトから呼ばせないため) |
+| POST | `/api/feeds/bulk` `{"feeds": [...], "agreed"}` | まとめて追加する (おすすめの「すべて追加」)。`{"added", "errors"}` を返す |
 | PATCH / DELETE | `/api/feeds/{id}` | ジャンル・総合系・記事の画像・取得するかを変える / 外す (未読の記事も消す) |
 
 ## 画面 (static/)

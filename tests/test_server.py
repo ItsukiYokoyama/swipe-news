@@ -37,6 +37,29 @@ def test_add_feed_requires_agreement(client, web):
     assert client.get("/api/feeds").json() == []
 
 
+def test_bulk_add_from_catalog_needs_no_fetch(client, web):
+    # Catalog sources are added without fetching the feed (web has no pages registered)
+    items = [{"url": f"https://news{i}.example/rss", "name": f"ニュース{i}", "genre": "AI",
+              "source": "catalog", "catalog_id": f"n{i}"} for i in range(3)]
+    assert client.post("/api/feeds/bulk", json={"feeds": items}).status_code == 400
+    items.append({**items[0], "catalog_id": "dup"})  # Same name and URL: reported, the rest still added
+    r = client.post("/api/feeds/bulk", json={"feeds": items, "agreed": True}).json()
+    assert [f["name"] for f in r["added"]] == ["ニュース0", "ニュース1", "ニュース2"]
+    assert len(r["errors"]) == 1 and r["errors"][0]["name"] == "ニュース0"
+    assert all(f["og_image"] is False for f in client.get("/api/feeds").json())
+
+
+def test_extension_folder(client, monkeypatch):
+    from swipe_news import desktop
+    opened = []
+    monkeypatch.setattr(desktop, "reveal", opened.append)
+    folder = client.get("/api/extension").json()["folder"]  # The source checkout has extension/
+    assert folder and folder.endswith("extension")
+    assert client.post("/api/extension/open").status_code == 403  # Other pages can't set the header
+    assert client.post("/api/extension/open", headers={"X-Swipe-News": "1"}).status_code == 204
+    assert [str(p) for p in opened] == [folder]
+
+
 def test_inspect_error_message(client, web):
     r = client.post("/api/feeds/inspect", json={"url": "notaurl"})
     assert r.status_code == 400 and "URL" in r.json()["detail"]

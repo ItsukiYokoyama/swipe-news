@@ -23,6 +23,8 @@
       <nav id="chips" class="flex min-w-0 flex-1 gap-2 overflow-x-auto"></nav>
       <button id="opened-btn" aria-label="最近開いた記事"
               class="flex h-8 lg:hidden shrink-0 items-center gap-1 rounded-full bg-white/10 px-3 text-sm font-bold ring-1 ring-white/25">開いた記事 <span id="opened-count">0</span></button>
+      <button id="ext-btn" title="Chrome 拡張機能「十字キーで戻る」の入れ方"
+              class="hidden h-8 shrink-0 items-center gap-1 rounded-full bg-sky-400/15 px-3 text-sm font-bold text-sky-100 ring-1 ring-sky-300/50">🧩 拡張機能</button>
       <button id="feeds-btn" class="h-8 shrink-0 rounded-full bg-white/10 px-3 text-sm font-bold ring-1 ring-white/25">メディア</button>
       <button id="settings-btn" class="h-8 shrink-0 rounded-full bg-white/10 px-3 text-sm font-bold ring-1 ring-white/25">設定</button>
       <button id="about-btn" aria-label="このアプリについて"
@@ -147,6 +149,11 @@
       <div class="min-h-0 flex-1 overflow-y-auto px-5 py-4">
         <section class="feeds-panel" data-panel="added">
           <p id="feeds-empty" class="hidden py-10 text-center text-sm text-white/55">まだメディアがありません。「おすすめから追加」か「URL を入れて追加」から追加してください。</p>
+          <div id="feeds-bulk" class="mb-3 flex flex-wrap items-center gap-2 text-xs">
+            <span class="text-white/55">記事の画像:</span>
+            <button id="images-all-on" class="rounded-full bg-white/10 px-3 py-1">すべてオン</button>
+            <button id="images-all-off" class="rounded-full bg-white/10 px-3 py-1">すべてオフ</button>
+          </div>
           <ul id="feeds-list" class="space-y-2"></ul>
           <p class="mt-4 text-xs leading-relaxed text-white/45">
             総合系: いろいろなジャンルの記事が載るメディア。AI がジャンルを自由に振り分けます (オフなら、選んだジャンルを少し優先します)。<br>
@@ -164,6 +171,7 @@
             <select id="catalog-filter" class="rounded-lg bg-white/5 px-2 py-1.5 text-sm ring-1 ring-white/15"></select>
             <span id="catalog-status" class="text-xs text-white/55" role="status"></span>
             <button id="catalog-reload" class="ml-auto rounded-full bg-white/10 px-3 py-1 text-xs">読み込み直す</button>
+            <button id="catalog-add-all" class="rounded-full bg-white px-4 py-1.5 text-sm font-bold text-black disabled:bg-white/10 disabled:text-white/50">すべて追加</button>
           </div>
           <ul id="catalog-list" class="space-y-2"></ul>
         </section>
@@ -224,11 +232,51 @@
       <p class="mb-4 text-xs leading-relaxed text-white/60">
         データ (操作の記録・学習・設定) はこの PC の中だけに保存します。巡回するときは各メディアの robots.txt を守り、同じサイトへは間をあけて取りに行きます。
       </p>
+      <p class="mb-4 text-xs leading-relaxed text-white/60">
+        記事のタブから十字キーで戻れる Chrome 拡張機能を同梱しています。<button id="about-ext" class="underline underline-offset-2">入れ方を見る</button>
+      </p>
       <p class="text-xs leading-relaxed text-white/50">
         ライセンス: GNU General Public License v3.0 以降 (GPL-3.0-or-later)。ジャンル判定のモデル ruri-v3-30m は Apache License 2.0、
         画面の Tailwind CSS は MIT License です。詳しくは同梱の LICENSE と THIRD_PARTY_NOTICES.md を見てください。
       </p>
       <form method="dialog" class="mt-5"><button class="w-full rounded-full bg-white py-2.5 text-sm font-bold text-black">閉じる</button></form>
+    </div>
+  </dialog>
+
+  <dialog id="ext-dialog" class="max-h-[85dvh] w-[min(92vw,560px)] overflow-y-auto rounded-2xl bg-zinc-900 p-0 text-white backdrop:bg-black/70">
+    <div class="p-5 text-sm leading-relaxed">
+      <h2 class="mb-2 text-lg font-bold">🧩 Chrome 拡張機能「十字キーで戻る」</h2>
+      <p class="mb-4 text-white/75">
+        記事のタブで <kbd class="!h-6 !min-w-6 text-xs">←</kbd> と <kbd class="!h-6 !min-w-6 text-xs">→</kbd> を押したまま
+        <kbd class="!h-6 !min-w-6 text-xs">↑</kbd> (または ← と → の長押し) で、そのタブを閉じて Swipe News に戻れます。
+        キーボードだけで読み進められるようになります。拡張機能が見るのは矢印キーの押し方だけで、ページの中身は読みません。
+      </p>
+      <ol class="mb-4 list-decimal space-y-2 pl-5">
+        <li>
+          拡張機能のフォルダ (<code class="text-xs text-white/70">extension</code>) の場所を開きます
+          <div class="mt-1.5 flex flex-wrap items-center gap-2">
+            <button id="ext-open" class="rounded-full bg-white px-4 py-1.5 text-sm font-bold text-black">フォルダを開く</button>
+            <code id="ext-folder" class="break-all text-xs text-white/55"></code>
+          </div>
+        </li>
+        <li>
+          Chrome のアドレスバーに <code class="rounded bg-white/10 px-1.5 py-0.5">chrome://extensions</code> と入れて開きます
+          <button id="ext-copy" class="ml-1 rounded-full bg-white/10 px-2.5 py-0.5 text-xs">コピー</button>
+          <span class="block text-xs text-white/50">(Edge なら edge://extensions。この画面からは直接開けません)</span>
+        </li>
+        <li>右上の「デベロッパー モード」をオンにします</li>
+        <li>「パッケージ化されていない拡張機能を読み込む」を押し、1 で開いた <code class="text-xs">extension</code> フォルダを選びます</li>
+        <li>この画面を読み込み直すと、上の「🧩 拡張機能」のボタンが消えます</li>
+      </ol>
+      <p class="mb-4 text-xs text-white/50">
+        もう入れているのにボタンが消えないときは、chrome://extensions で「Swipe News: 十字キーで戻る」の更新ボタン (↻) を押してください。
+        <a href="https://github.com/ItsukiYokoyama/swipe-news#chrome-%E6%8B%A1%E5%BC%B5%E6%A9%9F%E8%83%BD%E5%8D%81%E5%AD%97%E3%82%AD%E3%83%BC%E3%81%A7%E6%88%BB%E3%82%8B%E4%BB%BB%E6%84%8F"
+           target="_blank" rel="noopener noreferrer" class="underline underline-offset-2">詳細はこちら</a>
+      </p>
+      <div class="flex gap-2">
+        <button id="ext-hide" class="flex-1 rounded-full bg-white/10 py-2.5 text-sm font-bold">今後ボタンを出さない</button>
+        <form method="dialog" class="flex-1"><button class="w-full rounded-full bg-white py-2.5 text-sm font-bold text-black">閉じる</button></form>
+      </div>
     </div>
   </dialog>
 

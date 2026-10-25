@@ -13,6 +13,15 @@ BUNDLED_MODELS_DIR = PACKAGE_DIR / "models"
 PORTABLE = (Path(sys.executable).resolve().parent / "swipe-news-portable").exists()
 
 
+def extension_dir() -> Path | None:
+    """The bundled Chrome extension: next to the python folder in the Windows zip, or at the top of a source checkout.
+    A pip install doesn't include it."""
+    for d in (Path(sys.executable).resolve().parent.parent / "extension", PACKAGE_DIR.parent.parent / "extension"):
+        if (d / "manifest.json").exists():
+            return d
+    return None
+
+
 def _default_data_dir() -> Path:
     if sys.platform == "win32":
         return Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local") / APP_NAME

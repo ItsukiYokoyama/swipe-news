@@ -887,6 +887,7 @@ function renderFeedList() {
   const ul = document.getElementById("feeds-list");
   ul.innerHTML = "";
   document.getElementById("feeds-empty").classList.toggle("hidden", feedsState.list.length > 0);
+  document.getElementById("feeds-bulk").classList.toggle("hidden", feedsState.list.length === 0);
   for (const f of feedsState.list) {
     const li = make("li", "rounded-xl bg-white/5 p-3 ring-1 ring-white/10" + (f.enabled ? "" : " opacity-50"));
     const head = make("div", "mb-2 flex flex-wrap items-center gap-2");
@@ -919,6 +920,22 @@ function renderFeedList() {
     ul.append(li);
   }
 }
+
+async function setAllImages(on) {
+  const targets = feedsState.list.filter(f => f.og_image !== on);
+  if (!targets.length) { toast(on ? "すべてオンになっています" : "すべてオフになっています"); return; }
+  if (on && !confirm(`${targets.length} 件のメディアで記事の画像をオンにします。各メディアの利用規約を確かめましたか？`)) return;
+  let failed = 0;
+  for (const f of targets) {
+    try {
+      Object.assign(f, await api(`/api/feeds/${f.id}`, { method: "PATCH", body: JSON.stringify({ og_image: on }) }));
+    } catch { failed++; }
+  }
+  renderFeedList();
+  toast(failed ? `${failed} 件は変えられませんでした` : `記事の画像をすべて${on ? "オン" : "オフ"}にしました。次の巡回から反映します`);
+}
+document.getElementById("images-all-on").addEventListener("click", () => setAllImages(true));
+document.getElementById("images-all-off").addEventListener("click", () => setAllImages(false));
 
 // Check the box before every addition, then clear it (the next source needs its terms read too)
 function agreed() {
@@ -961,8 +978,13 @@ function renderCatalog() {
     for (const t of taxonomy) filter.append(new Option(t.category, t.category));
   }
   const cat = c => taxonomy.find(t => t.genres.some(g => g.name === c))?.category;
-  for (const f of feedsState.catalog?.feeds ?? []) {
-    if (filter.value && cat(f.genre) !== filter.value) continue;
+  const shown = (feedsState.catalog?.feeds ?? []).filter(f => !filter.value || cat(f.genre) === filter.value);
+  const addAll = document.getElementById("catalog-add-all");
+  const rest = shown.filter(f => !f.added).length;
+  addAll.disabled = !rest;
+  addAll.textContent = rest ? `すべて追加 (${rest})` : "すべて追加済み";
+  addAll.classList.toggle("hidden", !feedsState.catalog);
+  for (const f of shown) {
     const li = make("li", "flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl bg-white/5 p-3 ring-1 ring-white/10");
     const info = make("div", "min-w-0 flex-1");
     const head = make("div", "flex flex-wrap items-center gap-2");
@@ -982,7 +1004,7 @@ function renderCatalog() {
     btn.addEventListener("click", async () => {
       if (!agreed()) return;
       btn.disabled = true;
-      btn.textContent = "確かめています…";
+      btn.textContent = "追加しています…";
       try {
         await addFeed({ url: f.url, name: f.name, genre: f.genre, mixed: f.mixed, terms_url: f.terms_url,
                         site_url: f.site_url, source: "catalog", catalog_id: f.catalog_id });
@@ -1003,6 +1025,32 @@ document.getElementById("feeds-btn").addEventListener("click", async () => {
 document.querySelectorAll(".feeds-tab").forEach(b => b.addEventListener("click", () => showFeedsTab(b.dataset.tab)));
 document.getElementById("catalog-filter").addEventListener("change", renderCatalog);
 document.getElementById("catalog-reload").addEventListener("click", () => loadCatalog(true));
+
+// "Add all": every source shown (in the selected genre) that isn't added yet, with one confirmation
+document.getElementById("catalog-add-all").addEventListener("click", async e => {
+  const filter = document.getElementById("catalog-filter").value;
+  const cat = c => taxonomy.find(t => t.genres.some(g => g.name === c))?.category;
+  const targets = (feedsState.catalog?.feeds ?? []).filter(f => !f.added && (!filter || cat(f.genre) === filter));
+  if (!targets.length || !agreed()) return;
+  if (!confirm(`${targets.length} 件のメディアを追加します。それぞれの利用規約を読みましたか？`)) return;
+  const btn = e.currentTarget;
+  btn.disabled = true;
+  btn.textContent = "追加しています…";
+  try {
+    const res = await api("/api/feeds/bulk", { method: "POST", body: JSON.stringify({
+      agreed: true,
+      feeds: targets.map(f => ({ url: f.url, name: f.name, genre: f.genre, mixed: f.mixed, terms_url: f.terms_url,
+                                 site_url: f.site_url, source: "catalog", catalog_id: f.catalog_id })),
+    }) });
+    feedsAgree.checked = false;
+    const done = new Set(res.added.map(f => f.catalog_id));
+    for (const f of targets) if (done.has(f.catalog_id)) f.added = true;
+    await loadFeeds();
+    toast(`${res.added.length} 件を追加しました${res.errors.length ? ` (${res.errors.length} 件は追加できませんでした)` : ""}。記事を取っています…`);
+    setTimeout(reset, 15000);  // Reload around when the crawl finishes
+  } catch (err) { toast(err.message); }
+  renderCatalog();
+});
 
 document.getElementById("manual-inspect").addEventListener("submit", async e => {
   e.preventDefault();
@@ -1454,6 +1502,45 @@ async function checkUpdate() {
     document.querySelector("#about-update .update-link").href = u.url;
   }
 }
+
+// ---- Bundled Chrome extension: suggest it until it's installed (its marker.js sets data-swipe-news-extension)
+const EXT_HIDE_KEY = "swipe-news:ext-hint-hidden";
+const extDialog = document.getElementById("ext-dialog");
+const isChromium = () => navigator.userAgentData?.brands?.some(b => /Chrom|Edge/.test(b.brand)) ?? /Chrome\//.test(navigator.userAgent);
+
+async function openExtGuide() {
+  document.getElementById("about").close();
+  const folder = await api("/api/extension").then(r => r.folder).catch(() => null);
+  const open = document.getElementById("ext-open");
+  open.disabled = !folder;
+  open.classList.toggle("opacity-40", !folder);
+  document.getElementById("ext-folder").textContent = folder ?? "このインストールには同梱されていません。GitHub のソースの extension フォルダを使ってください";
+  extDialog.showModal();
+}
+
+document.getElementById("ext-btn").addEventListener("click", openExtGuide);
+document.getElementById("about-ext").addEventListener("click", openExtGuide);
+document.getElementById("ext-open").addEventListener("click", async () => {
+  const res = await fetch("/api/extension/open", { method: "POST", headers: { "X-Swipe-News": "1" } }).catch(() => null);
+  toast(res?.ok ? "エクスプローラーで extension フォルダの場所を開きました" : "フォルダを開けませんでした");
+});
+document.getElementById("ext-copy").addEventListener("click", () =>
+  navigator.clipboard.writeText("chrome://extensions").then(() => toast("コピーしました。アドレスバーに貼り付けてください"), () => {}));
+document.getElementById("ext-hide").addEventListener("click", () => {
+  try { localStorage.setItem(EXT_HIDE_KEY, "1"); } catch { /* Hidden for this session only */ }
+  document.getElementById("ext-btn").classList.add("hidden");
+  extDialog.close();
+  toast("ボタンを消しました。入れ方は「i」からも見られます");
+});
+// The content script runs at document_start, but give it a moment
+setTimeout(() => {
+  let hidden = false;
+  try { hidden = localStorage.getItem(EXT_HIDE_KEY) === "1"; } catch { /* Show it */ }
+  const installed = !!document.documentElement.dataset.swipeNewsExtension;
+  const show = !installed && !hidden && isChromium();
+  document.getElementById("ext-btn").classList.toggle("hidden", !show);
+  document.getElementById("ext-btn").classList.toggle("flex", show);
+}, 1500);
 
 // ---- About: version, recommended-list URL and the on-device model
 fetch("/api/config").then(r => r.json()).then(({ version, catalog_url, ai_genre }) => {

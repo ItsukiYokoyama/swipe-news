@@ -100,6 +100,16 @@ def open_folder(path: Path):
         subprocess.Popen(["open" if sys.platform == "darwin" else "xdg-open", str(path)])
 
 
+def reveal(path: Path):
+    """Open the folder that contains `path`, with `path` selected (so it's easy to pick in a file dialog later)."""
+    if sys.platform == "win32":
+        subprocess.Popen(["explorer", f"/select,{path}"])  # noqa: S607
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", "-R", str(path)])
+    else:
+        subprocess.Popen(["xdg-open", str(path.parent)])
+
+
 def register_start_menu(settings: dict):
     """In the Windows zip build, add "Swipe News" to the Start menu. Recreated if the folder moves."""
     if sys.platform != "win32" or not paths.PORTABLE:
@@ -126,6 +136,29 @@ def register_start_menu(settings: dict):
         log.info("added to the Start menu: %s", lnk)
     else:
         log.warning("could not add to the Start menu: %s", r.stderr.decode("mbcs", "replace").strip())
+
+
+def unblock_app_folder(settings: dict):
+    """In the Windows zip build, remove the "downloaded from the internet" mark (the Zone.Identifier stream) from
+    the app's own files. Without this, Windows asks "unknown publisher" every time Swipe News.cmd is started when
+    the zip wasn't unblocked before extracting. Done once per folder."""
+    if sys.platform != "win32" or not paths.PORTABLE:
+        return
+    root = Path(sys.executable).resolve().parent.parent
+    if settings.get("unblocked") == str(root):
+        return
+    count = 0
+    for dirpath, _dirs, files in os.walk(root):
+        for name in files:
+            try:
+                os.remove(os.path.join(dirpath, name) + ":Zone.Identifier")
+                count += 1
+            except OSError:
+                pass  # No mark (the usual case)
+    settings["unblocked"] = str(root)
+    save_settings(settings)
+    if count:
+        log.info("removed the downloaded-file mark from %d files in %s", count, root)
 
 
 def run_tray(server: Server, url: str):
@@ -183,7 +216,10 @@ def main(argv: list[str] | None = None):
         sys.exit(1)
     if not args.no_browser:
         webbrowser.open(url)
-    threading.Thread(target=register_start_menu, args=(settings,), daemon=True).start()
+    def after_start():
+        unblock_app_folder(settings)
+        register_start_menu(settings)
+    threading.Thread(target=after_start, daemon=True).start()
 
     if args.no_tray:
         try:

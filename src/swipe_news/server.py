@@ -7,12 +7,12 @@ import logging
 from contextlib import asynccontextmanager
 from typing import Literal
 
-from fastapi import BackgroundTasks, FastAPI, HTTPException, Query
+from fastapi import BackgroundTasks, FastAPI, Header, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import __version__, crawler, db, feeds, genre_ai, settings, taste, taxonomy, updates
+from . import __version__, crawler, db, feeds, genre_ai, paths, settings, taste, taxonomy, updates
 from .paths import STATIC_DIR
 
 log = logging.getLogger(__name__)
@@ -45,6 +45,25 @@ def manifest():
 def config():
     return {"app": "swipe-news", "version": __version__, "catalog_url": settings.CATALOG_URL,
             "ai_genre": {"enabled": settings.AI_GENRE, "model": genre_ai.MODEL_NAME}}
+
+
+@app.get("/api/extension")
+def extension():
+    """Where the bundled Chrome extension is (null when not bundled, e.g. a pip install)."""
+    d = paths.extension_dir()
+    return {"folder": str(d) if d else None}
+
+
+@app.post("/api/extension/open", status_code=204)
+def open_extension_folder(x_swipe_news: str | None = Header(default=None)):
+    # The custom header keeps other web pages from triggering this (a cross-site request can't set it without CORS)
+    if x_swipe_news != "1":
+        raise HTTPException(403, "この画面からだけ使えます")
+    d = paths.extension_dir()
+    if not d:
+        raise HTTPException(404, "拡張機能のフォルダが見つかりませんでした")
+    from .desktop import reveal
+    reveal(d)
 
 
 @app.get("/api/genres")
@@ -210,6 +229,28 @@ async def add_feed(body: NewFeed, background: BackgroundTasks):
         raise HTTPException(400, str(e)) from e
     background.add_task(crawler.run_once)  # Fetch the new source's articles right away
     return feed
+
+
+class NewFeeds(BaseModel):
+    feeds: list[NewFeed]
+    # One confirmation covers every source in this request
+    agreed: bool = False
+
+
+@app.post("/api/feeds/bulk")
+async def add_feeds(body: NewFeeds, background: BackgroundTasks):
+    """Add several sources at once ("add all" in the recommended list), then crawl once."""
+    if not body.agreed:
+        raise HTTPException(400, "個人で使うこと・利用規約を読んだことを確かめてから追加してください")
+    added, errors = [], []
+    for item in body.feeds:
+        try:
+            added.append(await feeds.add(**item.model_dump(exclude={"agreed"})))
+        except feeds.FeedError as e:
+            errors.append({"name": item.name, "error": str(e)})
+    if added:
+        background.add_task(crawler.run_once)
+    return {"added": added, "errors": errors}
 
 
 class FeedChange(BaseModel):

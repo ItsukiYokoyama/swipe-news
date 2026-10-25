@@ -28,6 +28,20 @@ def test_run_once_ingests_enabled_feeds(web):
     assert all(c["category"] == "社会" and c["media_name"] == "ニュース" for c in cards)
 
 
+def test_run_once_requested_while_running_crawls_again(monkeypatch):
+    calls = []
+
+    async def crawl():
+        calls.append(1)
+        if len(calls) == 1:
+            assert (await crawler.run_once())["status"] == "already_running"  # e.g. a source added meanwhile
+        return {"status": "ok"}
+
+    monkeypatch.setattr(crawler, "_crawl", crawl)
+    assert asyncio.run(crawler.run_once())["status"] == "ok"
+    assert len(calls) == 2
+
+
 def test_run_once_skips_feed_blocked_by_robots(web):
     web["https://news.example/robots.txt"] = (200, "text/plain", "User-agent: *\nDisallow: /rss")
     web["https://news.example/rss"] = (200, "application/rss+xml", rss("a"))

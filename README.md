@@ -45,6 +45,7 @@ GitHub で配布しています。
 3. 展開してできたフォルダの `Swipe News.cmd` をダブルクリックする
 
 ブラウザで画面が開き、タスクトレイにアイコンが出ます。初回に、スタートメニューへ「Swipe News」を登録します。
+「許可する」にしないで展開したときは、最初の起動で「発行元を確認できませんでした」と出ます。「実行」を押せば、次からは出ません。
 Python ごと同梱しているので、ほかに入れるものはありません（同梱しているのは python.org の公式の Python で、独自の exe は入っていません）。
 
 ### macOS / Linux
@@ -75,7 +76,8 @@ Linux のタスクトレイは環境によって動かないので、そのと�
 1. 初めて起動すると「読むメディアを追加しましょう」と出るので、**メディア** を押す
 2. 「おすすめから追加」で一覧から選ぶか、「URL を入れて追加」で RSS（またはサイトのページ）の URL を入れる
    - 追加するたびに、「個人で読む目的に限って使うこと、利用規約を読んで守ること」の確認にチェックを入れます
-   - 「記事の画像」（記事ページのプレビュー画像）は既定でオフです。規約を確かめてから、メディアごとにオンにしてください
+   - おすすめの一覧は「すべて追加」で、選んでいるジャンルのメディアをまとめて追加できます
+   - 「記事の画像」（記事ページのプレビュー画像）は既定でオフです。規約を確かめてから、メディアごとに（または「すべてオン」で）オンにしてください
 3. 記事が届いたら、カードを仕分けていく。新しい記事は 30 分おきに届きます
 
 <img width="1280" height="800" alt="メディアの設定" src="docs/images/screenshot-media.png" />
@@ -112,6 +114,8 @@ Linux のタスクトレイは環境によって動かないので、そのと�
 
 1. Chrome で `chrome://extensions` を開き、右上の「デベロッパーモード」をオンにする
 2. 「パッケージ化されていない拡張機能を読み込む」を押し、Swipe News のフォルダの中の `extension` フォルダを選ぶ
+
+入れていないあいだは、画面の上に「🧩 拡張機能」が出ます。押すと、この手順と、`extension` フォルダをエクスプローラーで開くボタンが出ます。
 
 拡張機能が見るのは矢印キーの押し方だけで、ページの中身は読みません。
 
@@ -239,6 +243,7 @@ Swipe News is distributed on GitHub.
 3. Double-click `Swipe News.cmd` in the extracted folder
 
 The screen opens in your browser and an icon appears in the system tray. On first launch, "Swipe News" is added to the Start menu.
+If you extracted it without "Unblock", Windows says "The publisher could not be verified" on the first launch. Click "Run" and it won't appear again.
 Python is bundled, so you don't need to install anything else (it's the official Python from python.org; there are no custom executables).
 
 ### macOS / Linux
@@ -269,7 +274,8 @@ Quit the old version first (right-click the tray icon → "終了" (Quit)) befor
 1. On first launch you'll see "読むメディアを追加しましょう" (Let's add sources to read). Click **メディア** (Sources)
 2. Choose from the list under "おすすめから追加" (Add from recommendations), or enter an RSS (or site) URL under "URL を入れて追加" (Add by URL)
    - Each time you add a source, you check a box confirming that you'll use it only for personal reading and that you've read and will follow its terms
-   - "記事の画像" (article images, the preview image of each article page) is off by default. Turn it on per source after checking its terms
+   - "すべて追加" (Add all) adds every recommended source in the selected genre at once
+   - "記事の画像" (article images, the preview image of each article page) is off by default. Turn it on per source (or with "すべてオン", all on) after checking its terms
 3. Once articles arrive, sort the cards. New articles arrive every 30 minutes
 
 | Action | Mouse / buttons | Keys |
@@ -302,6 +308,8 @@ On an article's tab, hold ← and → and press ↑ (or hold ← and → for 0.7
 
 1. Open `chrome://extensions` in Chrome and turn on "Developer mode" in the top right
 2. Click "Load unpacked" and choose the `extension` folder inside the Swipe News folder
+
+Until it's installed, "🧩 拡張機能" (Extension) appears at the top of the screen. Click it for these steps and a button that opens the `extension` folder in Explorer.
 
 The extension only watches how the arrow keys are pressed; it never reads the page's content.
 

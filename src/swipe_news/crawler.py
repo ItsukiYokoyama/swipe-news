@@ -163,23 +163,35 @@ async def classify_genres(feeds: list[dict]) -> int:
 
 
 _lock = asyncio.Lock()
+_again = False
 
 
 async def run_once() -> dict:
+    """Crawl every source. If asked again while running (a source was just added), crawl once more afterwards."""
+    global _again
     if _lock.locked():
+        _again = True
         return {"status": "already_running"}
     async with _lock:
-        feeds = []
-        for f in db.list_feeds(enabled_only=True):
-            if taxonomy.category_of(f["genre"]):
-                feeds.append(f)
-            else:  # Sub-genre removed from genres.yaml: skip until the user picks another one
-                log.warning("%s: sub-genre %s is not in genres.yaml; skipping", f["name"], f["genre"])
-        apply_feed_genres(feeds)
-        purged = db.drop_unread_except([f["name"] for f in feeds]) + db.purge_older_than(settings.RETENTION_DAYS)
-        added = await ingest(feeds)
-        await update_vectors()
-        moved = await classify_genres(feeds)
+        while True:
+            _again = False
+            result = await _crawl()
+            if not _again:
+                return result
+
+
+async def _crawl() -> dict:
+    feeds = []
+    for f in db.list_feeds(enabled_only=True):
+        if taxonomy.category_of(f["genre"]):
+            feeds.append(f)
+        else:  # Sub-genre removed from genres.yaml: skip until the user picks another one
+            log.warning("%s: sub-genre %s is not in genres.yaml; skipping", f["name"], f["genre"])
+    apply_feed_genres(feeds)
+    purged = db.drop_unread_except([f["name"] for f in feeds]) + db.purge_older_than(settings.RETENTION_DAYS)
+    added = await ingest(feeds)
+    await update_vectors()
+    moved = await classify_genres(feeds)
     log.info("crawl done: %d sources / %d new / %d re-classified / %d deleted",
              len(feeds), added, moved, purged)
     return {"status": "ok", "added": added, "genre_changed": moved, "purged": purged}
